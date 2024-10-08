@@ -34,10 +34,11 @@ class ViewController: UIViewController {
         $0.numberOfLines = 0
         $0.attributedText = .makeAttributedString(text: "지금은 모집 기간이 아니에요.\n 모집 기간이 되면 메일로 알려드릴게요.",
                                                   color: .white,
-                                                  font: UIFont.systemFont(ofSize: 20, weight: .heavy),
+                                                  font: UIFont.systemFont(ofSize: 18, weight: .heavy),
                                                   textAlignment: .center,
                                                   lineBreakMode: .byWordWrapping,
-                                                  lineBreakStrategy: .hangulWordPriority)
+                                                  lineBreakStrategy: .hangulWordPriority,
+                                                  lineHeightMultiple: 1.4)
     }
     
     private let emailInputContainerView = UIView().then {
@@ -67,9 +68,9 @@ class ViewController: UIViewController {
         $0.attributedPlaceholder = .makeAttributedString(text: "메일을 입력해주세요.",
                                                          color: .white,
                                                          font: UIFont.systemFont(ofSize: 16))
+        $0.textColor = .white
         $0.tintColor = .white
         $0.backgroundColor = .clear
-        $0.textColor = .white
     }
     
     private let modeSwitch = UISwitch().then {
@@ -90,7 +91,7 @@ class ViewController: UIViewController {
     
     
     private func makeUI() {
-        view.backgroundColor = UIColor(hex: 0x101111)
+        view.backgroundColor = .Week1ColorSet.backgroundColor
         
         view.addSubview(currentModeLabel)
         currentModeLabel.attributedText = .makeAttributedString(text: "현재 모드 : \(navigationMode.toString())",
@@ -113,7 +114,7 @@ class ViewController: UIViewController {
         
         view.addSubview(contentsLabel)
         contentsLabel.frame = CGRect(x: UIScreen.main.bounds.width / 2 - 175,
-                                     y: UIScreen.main.bounds.height / 2 - 90,
+                                     y: UIScreen.main.bounds.height / 2 - 100,
                                      width: 350,
                                      height: 200)
         
@@ -173,7 +174,6 @@ class ViewController: UIViewController {
 }
 
 
-// MARK: - Email Check Logic
 extension ViewController {
     
     private func isEmailNotEmpty(email: String) -> Bool {
@@ -194,73 +194,6 @@ extension ViewController {
         guard email.wholeMatch(of: emailRegex) != nil else { return false }
         
         return true
-    }
-}
-
-
-// MARK: - Event Handlers
-extension ViewController {
-
-    @objc private func applyButtonDidTap() {
-        let email: String = emailTextfield.text ?? ""
-        
-        // (1) 이메일 존재 여부 체크
-        guard isEmailNotEmpty(email: email) else {
-            emailErrorLabel.attributedText = .makeAttributedString(text: "이메일을 입력해주세요.",
-                                                              color: UIColor(hex: 0xFF8C85),
-                                                              font: UIFont.systemFont(ofSize: 14, weight: .medium))
-            emailErrorLabel.isHidden = false
-            return
-        }
-        
-        // (2) 이메일 유효성 체크
-        guard isEmailValid(email: email) else {
-            emailErrorLabel.attributedText = .makeAttributedString(text: "유효한 이메일을 입력해주세요.",
-                                                              color: UIColor(hex: 0xFF8C85),
-                                                              font: UIFont.systemFont(ofSize: 14, weight: .medium))
-            emailErrorLabel.isHidden = false
-            return
-        }
-        
-        // 키보드 내림
-        view.endEditing(true)
-        
-        // 데이터 전달 및 내비게이션 수행
-        switch navigationMode {
-        case .push:
-            let detailViewController = DetailViewController()
-            detailViewController.dataBind(email: email)
-            
-            navigationController?.pushViewController(detailViewController, animated: true, completion: { [weak self] in
-                guard let self else { return }
-                resetUI()
-            })
-        case .present:
-            let modalViewController = ModalViewController()
-            modalViewController.dataBind(email: email)
-            
-            navigationController?.present(UINavigationController(rootViewController: modalViewController), animated: true, completion: { [weak self] in
-                guard let self else { return }
-                resetUI()
-            })
-        }
-    }
-    
-    
-    @objc private func toggleSwitch(sender: UISwitch) {
-        navigationMode = sender.isOn ? .push : .present
-    }
-    
-    
-    @objc private func keyboardWillShow(_ notification: Notification) {
-        if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
-            adjustLayoutForKeyboardAppearance(with: keyboardFrame.height)
-        }
-    }
-
-    
-    @objc private func keyboardWillHide(_ notification: Notification) {
-        restoreOriginalLayout()
     }
     
     
@@ -335,6 +268,73 @@ extension ViewController {
         emailErrorLabel.isHidden = true
         emailErrorLabel.attributedText = nil
         emailTextfield.text = nil
+    }
+}
+
+
+// MARK: - Event Handlers
+extension ViewController {
+
+    @objc private func applyButtonDidTap() {
+        let email: String = emailTextfield.text ?? ""
+        
+        // (1) 이메일 존재 여부 체크
+        guard isEmailNotEmpty(email: email) else {
+            emailErrorLabel.attributedText = .makeAttributedString(text: "이메일을 입력해주세요.",
+                                                                   color: .Week1ColorSet.errorMessageColor,
+                                                                   font: UIFont.systemFont(ofSize: 14, weight: .medium))
+            emailErrorLabel.isHidden = false
+            return
+        }
+        
+        // (2) 이메일 유효성 체크
+        guard isEmailValid(email: email) else {
+            emailErrorLabel.attributedText = .makeAttributedString(text: "유효한 이메일을 입력해주세요.",
+                                                                   color: .Week1ColorSet.errorMessageColor,
+                                                                   font: UIFont.systemFont(ofSize: 14, weight: .medium))
+            emailErrorLabel.isHidden = false
+            return
+        }
+        
+        // 키보드 내림
+        view.endEditing(true)
+        
+        // 데이터 전달 및 내비게이션 수행
+        switch navigationMode {
+        case .push:
+            let detailViewController = DetailViewController()
+            detailViewController.dataBind(email: email)
+            
+            navigationController?.pushViewController(detailViewController, animated: true, completion: { [weak self] in
+                guard let self else { return }
+                resetUI()
+            })
+        case .present:
+            let modalViewController = ModalViewController()
+            modalViewController.dataBind(email: email)
+            
+            navigationController?.present(UINavigationController(rootViewController: modalViewController), animated: true, completion: { [weak self] in
+                guard let self else { return }
+                resetUI()
+            })
+        }
+    }
+    
+    
+    @objc private func toggleSwitch(sender: UISwitch) {
+        navigationMode = sender.isOn ? .push : .present
+    }
+    
+    
+    @objc private func keyboardWillShow(_ notification: Notification) {
+        if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
+            adjustLayoutForKeyboardAppearance(with: keyboardFrame.height)
+        }
+    }
+
+    
+    @objc private func keyboardWillHide(_ notification: Notification) {
+        restoreOriginalLayout()
     }
 }
 

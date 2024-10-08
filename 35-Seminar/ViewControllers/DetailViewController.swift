@@ -42,7 +42,7 @@ final class DetailViewController: UIViewController {
         view.addSubview(titleLabel)
         titleLabel.snp.makeConstraints {
             $0.centerX.equalToSuperview()
-            $0.centerY.equalToSuperview().offset(-20)
+            $0.centerY.equalToSuperview().offset(-80)
         }
         
         view.addSubview(emailLabel)

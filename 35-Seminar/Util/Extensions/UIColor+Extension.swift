@@ -15,3 +15,11 @@ extension UIColor {
         self.init(red: red, green: green, blue: blue, alpha: alpha)
     }
 }
+
+
+extension UIColor {
+    public enum Week1ColorSet {
+        public static let backgroundColor = UIColor(hex: 0x101111)
+        public static let errorMessageColor = UIColor(hex: 0xFF8C85)
+    }
+}
