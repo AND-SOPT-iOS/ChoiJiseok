@@ -74,7 +74,7 @@ class ViewController: UIViewController {
     }
     
     private let modeSwitch = UISwitch().then {
-        $0.tintColor = .systemBlue
+        $0.onTintColor = .systemBlue
         $0.isEnabled = true
         $0.isOn = true
     }
