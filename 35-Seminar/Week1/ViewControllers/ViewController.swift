@@ -25,6 +25,12 @@ class ViewController: UIViewController {
     
     private let currentModeLabel = UILabel()
     
+    private let passwordLabel = UILabel().then {
+        $0.attributedText = .makeAttributedString(text: "전달된 비밀번호 없음",
+                                                  color: .white,
+                                                  font: UIFont.boldSystemFont(ofSize: 12))
+    }
+    
     private let logoImageView = UIImageView().then {
         $0.image = UIImage(named: "sopt_icon")
         $0.contentMode = .scaleAspectFit
@@ -101,6 +107,11 @@ class ViewController: UIViewController {
                                         y: 90,
                                         width: 100,
                                         height: 30)
+        view.addSubview(passwordLabel)
+        passwordLabel.frame = CGRect(x: 20,
+                                     y: 130,
+                                     width: 200,
+                                     height: 30)
         
         view.addSubview(modeSwitch)
         modeSwitch.frame.origin = CGPoint(x: UIScreen.main.bounds.width - 70,
@@ -303,6 +314,7 @@ extension ViewController {
         switch navigationMode {
         case .push:
             let detailViewController = DetailViewController()
+            detailViewController.delegate = self
             detailViewController.dataBind(email: email)
             
             navigationController?.pushViewController(detailViewController, animated: true, completion: { [weak self] in
@@ -364,5 +376,20 @@ extension ViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
+    }
+}
+
+
+extension ViewController: DetailViewControllerDelegate {
+    func confirmButtonDidTap(password: String?) {
+        if let password, !password.isEmpty {
+            passwordLabel.attributedText = .makeAttributedString(text: password,
+                                                                 color: .white,
+                                                                 font: UIFont.systemFont(ofSize: 12))
+        } else {
+            passwordLabel.attributedText = .makeAttributedString(text: "전달된 비밀번호 없음",
+                                                                 color: .white,
+                                                                 font: UIFont.systemFont(ofSize: 12))
+        }
     }
 }
