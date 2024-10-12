@@ -318,6 +318,21 @@ extension ViewController {
                 resetUI()
             })
         }
+        
+        func address(of object: UnsafeRawPointer) -> String {
+            let addr = Int(bitPattern: object)
+            return String(format: "%p", addr)
+        }
+        
+        struct A {
+            var a: Int = 0
+            let b: Int = 0
+        }
+        
+        var a = A()
+        print(a)
+        a.a = 0
+        print(a)
     }
     
     
