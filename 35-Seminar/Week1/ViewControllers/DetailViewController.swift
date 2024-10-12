@@ -48,6 +48,7 @@ final class DetailViewController: UIViewController {
     private var password: String?
     
     weak var delegate: DetailViewControllerDelegate?
+    var completionHandler: ((String?) -> ())?
     
     
     override func viewDidLoad() {
@@ -55,6 +56,10 @@ final class DetailViewController: UIViewController {
         
         makeUI()
         bindAction()
+    }
+    
+    deinit {
+        print("DetailViewController deinit")
     }
     
     
@@ -141,6 +146,12 @@ extension DetailViewController {
     @objc private func confirmButtonDidTap() {
         navigationController?.popViewController(animated: true)
         delegate?.confirmButtonDidTap(password: passwordTextfield.text)
+        completionHandler?(passwordTextfield.text)
+//        DispatchQueue.global().asyncAfter(deadline: .now() + 3.0) { [weak self] in
+//            print("Completion Call")
+//            print("self \(self)")
+//            self?.completionHandler?(self?.passwordTextfield.text)
+//        }
     }
 }
 

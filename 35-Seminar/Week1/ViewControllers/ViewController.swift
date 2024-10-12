@@ -315,6 +315,9 @@ extension ViewController {
         case .push:
             let detailViewController = DetailViewController()
             detailViewController.delegate = self
+            detailViewController.completionHandler = { text in
+                print("Completion Handler Called - Given text : \(text ?? "없음")")
+            }
             detailViewController.dataBind(email: email)
             
             navigationController?.pushViewController(detailViewController, animated: true, completion: { [weak self] in
