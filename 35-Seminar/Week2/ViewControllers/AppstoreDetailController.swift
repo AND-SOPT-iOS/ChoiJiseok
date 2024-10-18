@@ -202,6 +202,25 @@ final class AppstoreDetailController: UIViewController {
                                                   lineHeightMultiple: 1.4)
     }
     
+    private let previewView = UIView()
+    
+    private let previewInfoTitleView = UILabel().then {
+        $0.attributedText = .makeAttributedString(text: "미리 보기",
+                                                  color: .black,
+                                                  font: UIFont.systemFont(ofSize: 22, weight: .bold))
+    }
+    
+    private let previewImagesContainerView = UIView()
+    
+    private let firstPreviewImageView = UIImageView().then {
+        $0.image = UIImage(named: "toss_preview_1")
+        $0.contentMode = .scaleAspectFill
+        $0.layer.cornerRadius = 30
+        $0.clipsToBounds = true
+        $0.layer.borderWidth = 0.5
+        $0.layer.borderColor = UIColor.lightGray.cgColor
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -260,6 +279,13 @@ final class AppstoreDetailController: UIViewController {
                         newAppVersionLabel,
                         elapsedDaysLabel,
                         versionChangeLogLabel
+                    ),
+                    // 앱 프리뷰 이미지 리스트 뷰
+                    previewView.addSubViews(
+                        previewInfoTitleView,
+                        previewImagesContainerView.addSubViews(
+                            firstPreviewImageView
+                        )
                     )
                 )
             )
@@ -355,6 +381,29 @@ final class AppstoreDetailController: UIViewController {
             $0.top.equalTo(elapsedDaysLabel.snp.bottom).offset(10)
             $0.left.right.equalToSuperview().inset(20)
             $0.bottom.equalToSuperview().inset(12)
+        }
+        
+        // MARK: 미리 보기
+        previewView.snp.makeConstraints {
+            $0.height.equalTo(520)
+        }
+        
+        previewInfoTitleView.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(24)
+            $0.height.equalTo(30)
+            $0.left.equalToSuperview().inset(20)
+        }
+        
+        previewImagesContainerView.snp.makeConstraints {
+            $0.top.equalTo(previewInfoTitleView.snp.bottom).offset(12)
+            $0.left.right.equalToSuperview()
+            $0.bottom.equalToSuperview()
+        }
+        
+        firstPreviewImageView.snp.makeConstraints {
+            $0.top.bottom.equalToSuperview()
+            $0.left.equalToSuperview().inset(20)
+            $0.width.equalTo(215)
         }
     }
 }
