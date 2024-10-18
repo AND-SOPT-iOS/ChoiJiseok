@@ -164,19 +164,10 @@ final class AppstoreDetailController: UIViewController {
         super.viewDidLoad()
         
         makeUI()
-        
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(test),
-                                               name: Notification.Name("Test"),
-                                               object: nil)
     }
     
     deinit {
         print("Detail ViewController Deinit")
-    }
-    
-    @objc func test() {
-        self.titleLabel.text = "good"
     }
     
     private func makeUI() {
