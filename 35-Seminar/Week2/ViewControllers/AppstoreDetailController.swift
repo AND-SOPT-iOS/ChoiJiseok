@@ -59,13 +59,106 @@ final class AppstoreDetailController: UIViewController {
     }
     
     private let shareIconButton = UIButton().then {
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .bold)
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .semibold)
         let image = UIImage(systemName: "square.and.arrow.up", withConfiguration: imageConfig)
         $0.setImage(image, for: .normal)
         $0.tintColor = .systemBlue
         $0.contentMode = .scaleAspectFit
     }
     
+    private let appInfoHorizontalSwipeContainerView = UIView()
+    
+    private let appInfoHorizontalSwipeStackView = UIStackView().then {
+        $0.axis = .horizontal
+        $0.alignment = .center
+        $0.addTopBorder(color: .lightGray, width: 1)
+        $0.addBottomBorder(color: .lightGray, width: 1)
+    }
+    
+    private let ratingView = UIStackView().then {
+        $0.distribution = .fillProportionally
+        $0.axis = .vertical
+        $0.alignment = .center
+        $0.spacing = 8
+        $0.addRightBorder(color: .lightGray, width: 1, multiplier: 0.4)
+    }
+    
+    private let ratingCountLabel = UILabel().then {
+        $0.attributedText = .makeAttributedString(text: "8.4만개의 평가",
+                                                  color: .gray,
+                                                  font: UIFont.systemFont(ofSize: 12, weight: .light))
+    }
+    
+    private let ratingScoreLabel = UILabel().then {
+        $0.attributedText = .makeAttributedString(text: "4.4",
+                                                  color: .gray,
+                                                  font: UIFont.systemFont(ofSize: 22, weight: .semibold))
+    }
+    
+    private let ratingStarsView = UIView()
+    
+    private let ratingStarsBackgroundView = UIView().then {
+        $0.backgroundColor = .gray
+    }
+    
+    private let ratingStarsForegroundImageView = UIImageView().then {
+        $0.image = UIImage(named: "stars_container")
+        $0.contentMode = .scaleAspectFill
+    }
+    
+    private let awardView = UIStackView().then {
+        $0.distribution = .fillProportionally
+        $0.axis = .vertical
+        $0.alignment = .center
+        $0.spacing = 8
+        $0.addRightBorder(color: .lightGray, width: 1, multiplier: 0.4)
+    }
+    
+    private let awardInfoTitleLabel = UILabel().then {
+        $0.attributedText = .makeAttributedString(text: "수상",
+                                                  color: .gray,
+                                                  font: UIFont.systemFont(ofSize: 12, weight: .light))
+    }
+    
+    private let awardImageView = UIImageView().then {
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .semibold)
+        $0.image = UIImage(systemName: "person", withConfiguration: imageConfig)
+        $0.tintColor = .gray
+        $0.contentMode = .scaleAspectFit
+    }
+    
+    private let awardInfoSubTitleLabel = UILabel().then {
+        $0.attributedText = .makeAttributedString(text: "앱",
+                                                  color: .gray,
+                                                  font: UIFont.systemFont(ofSize: 14, weight: .light))
+    }
+    
+    private let ageView = UIStackView().then {
+        $0.distribution = .fillProportionally
+        $0.axis = .vertical
+        $0.alignment = .center
+        $0.spacing = 8
+        $0.addRightBorder(color: .lightGray, width: 1, multiplier: 0.4)
+    }
+    
+    private let ageInfoTitleLabel = UILabel().then {
+        $0.attributedText = .makeAttributedString(text: "연령",
+                                                  color: .gray,
+                                                  font: UIFont.systemFont(ofSize: 12, weight: .light))
+    }
+    
+    private let ageLabel = UILabel().then {
+        $0.attributedText = .makeAttributedString(text: "4+",
+                                                  color: .gray,
+                                                  font: UIFont.systemFont(ofSize: 22, weight: .semibold))
+    }
+    
+    private let ageInfoSubTitleLabel = UILabel().then {
+        $0.attributedText = .makeAttributedString(text: "세",
+                                                  color: .gray,
+                                                  font: UIFont.systemFont(ofSize: 14, weight: .light))
+    }
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -101,8 +194,33 @@ final class AppstoreDetailController: UIViewController {
                         ),
                         downloadButton,
                         shareIconButton
+                    ),
+                    // 앱 정보 수평 스크롤 뷰
+                    appInfoHorizontalSwipeContainerView.addSubViews(
+                        appInfoHorizontalSwipeStackView.addArrangedSubViews(
+                            // 사용자 평점 뷰
+                            ratingView.addArrangedSubViews(
+                                ratingCountLabel,
+                                ratingScoreLabel,
+                                ratingStarsView.addSubViews(
+                                    ratingStarsBackgroundView,
+                                    ratingStarsForegroundImageView
+                                )
+                            ),
+                            // 수상 뷰
+                            awardView.addArrangedSubViews(
+                                awardInfoTitleLabel,
+                                awardImageView,
+                                awardInfoSubTitleLabel
+                            ),
+                            // 연령 뷰
+                            ageView.addArrangedSubViews(
+                                ageInfoTitleLabel,
+                                ageLabel,
+                                ageInfoSubTitleLabel
+                            )
+                        )
                     )
-                    // 앱 정보 스크롤 뷰
                 )
             )
         )
@@ -138,5 +256,65 @@ final class AppstoreDetailController: UIViewController {
             $0.right.equalToSuperview().inset(20)
             $0.bottom.equalTo(appIconImageView.snp.bottom)
         }
+        
+        // MARK: 수평 스크롤 뷰
+        appInfoHorizontalSwipeContainerView.snp.makeConstraints {
+            $0.top.equalTo(titleInfoView.snp.bottom)
+            $0.horizontalEdges.equalToSuperview()
+            $0.height.equalTo(100)
+        }
+        
+        appInfoHorizontalSwipeStackView.snp.makeConstraints {
+            $0.top.bottom.equalToSuperview()
+            $0.left.equalToSuperview().inset(20)
+            $0.height.equalToSuperview()
+        }
+        
+        ratingView.snp.makeConstraints {
+            $0.width.equalTo(108)
+        }
+        
+        ratingStarsView.snp.makeConstraints { (make) in
+            make.width.equalTo(80)
+            make.height.equalTo(15)
+        }
+        
+        ratingStarsBackgroundView.snp.makeConstraints {
+            $0.verticalEdges.equalToSuperview()
+            $0.width.equalToSuperview().multipliedBy(4.4 / 5.0)
+        }
+        
+        ratingStarsForegroundImageView.snp.makeConstraints {
+            $0.width.equalToSuperview()
+            $0.verticalEdges.equalTo(ratingStarsBackgroundView)
+        }
+        
+        awardView.snp.makeConstraints {
+            $0.width.equalTo(108)
+        }
+        
+        ageView.snp.makeConstraints {
+            $0.width.equalTo(108)
+        }
     }
 }
+
+// SwiftUI preview
+#if DEBUG
+import SwiftUI
+struct AppstoreDetailControllerRepresentable: UIViewControllerRepresentable {
+    
+    func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
+        
+    }
+    
+    @available(iOS 13.0, *)
+    func makeUIViewController(context: Context) -> some UIViewController {
+        AppstoreDetailController()
+    }
+}
+
+#Preview {
+    AppstoreDetailControllerRepresentable()
+}
+#endif
