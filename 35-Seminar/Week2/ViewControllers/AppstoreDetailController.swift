@@ -26,30 +26,7 @@ final class AppstoreDetailController: UIViewController {
     
     private let appPreviewsView = AppPreviewsView()
     
-    private let compatibleDevicesView = UIView()
-    
-    private let compatibleDevicesContainerView = UIView().then {
-        $0.addBottomBorder(color: .lightGray, width: 1)
-    }
-    
-    private let compatibleDeviceIconImagesStackView = UIStackView().then {
-        $0.axis = .horizontal
-        $0.alignment = .center
-        $0.spacing = 10
-    }
-    
-    private let compatibleDeviceIconImageView = UIImageView().then {
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 18, weight: .regular)
-        $0.image = UIImage(systemName: "iphone", withConfiguration: imageConfig)
-        $0.tintColor = .lightGray
-        $0.contentMode = .scaleAspectFit
-    }
-    
-    private let compatibleDeviceNameLabel = UILabel().then {
-        $0.attributedText = .makeAttributedString(text: "iPhone",
-                                                  color: .gray,
-                                                  font: UIFont.systemFont(ofSize: 14, weight: .medium))
-    }
+    private let appCompatibleDevicesView = AppCompatibleDevicesView()
     
     private let appDetailInfoView = UIView()
     
@@ -421,16 +398,8 @@ final class AppstoreDetailController: UIViewController {
                     appNewUpdateView,
                     // 앱 프리뷰 이미지 리스트 뷰
                     appPreviewsView,
-                    
                     // 호환 기기 뷰
-                    compatibleDevicesView.addSubViews(
-                        compatibleDevicesContainerView.addSubViews(
-                            compatibleDeviceIconImagesStackView.addArrangedSubViews(
-                                compatibleDeviceIconImageView
-                            ),
-                            compatibleDeviceNameLabel
-                        )
-                    ),
+                    appCompatibleDevicesView,
                     // 앱 디테일 정보 뷰
                     appDetailInfoView.addSubViews(
                         appDetailInfoLabel,
@@ -498,32 +467,10 @@ final class AppstoreDetailController: UIViewController {
         containerStackView.setCustomSpacing(20, after: appTitleInfoView)
         containerStackView.setCustomSpacing(10, after: appShortInfoSwipeView)
         containerStackView.setCustomSpacing(24, after: appNewUpdateView)
-    
+        containerStackView.setCustomSpacing(12, after: appPreviewsView)
         
         // MARK: 호환 기기 뷰
-        compatibleDevicesView.snp.makeConstraints {
-            $0.height.equalTo(56)
-        }
-        compatibleDevicesContainerView.snp.makeConstraints {
-            $0.top.bottom.equalToSuperview()
-            $0.left.right.equalToSuperview().inset(20)
-        }
-        
-        compatibleDeviceIconImagesStackView.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(12)
-            $0.left.equalToSuperview()
-        }
-        
-        compatibleDeviceIconImageView.snp.makeConstraints {
-            $0.size.equalTo(20)
-        }
-        
-        compatibleDeviceNameLabel.snp.makeConstraints {
-            $0.left.equalTo(compatibleDeviceIconImagesStackView.snp.right).offset(10)
-            $0.centerY.equalTo(compatibleDeviceIconImageView.snp.centerY)
-            $0.right.equalToSuperview().inset(20)
-            $0.height.equalTo(20)
-        }
+
         
         // MARK: 앱 디테일 정보 뷰
         appDetailInfoLabel.snp.makeConstraints {
