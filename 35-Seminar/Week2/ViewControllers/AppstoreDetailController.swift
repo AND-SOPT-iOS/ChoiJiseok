@@ -594,6 +594,10 @@ final class AppstoreDetailController: UIViewController {
         bindAction()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        loadData()
+    }
+    
     deinit {
         print("Detail ViewController Deinit")
     }
@@ -1003,6 +1007,26 @@ final class AppstoreDetailController: UIViewController {
     @objc private func appDetailInfoShowMoreButtonDidTap() {
         appDetailInfoLabel.numberOfLines = 0
         appDetailInfoShowMoreButton.isHidden = true
+    }
+    
+    private func loadData() {
+        // json 파일 경로
+        guard let url = Bundle.main.url(forResource: "adp_mock", withExtension: "json") else {
+            print("JSON file not found")
+            return
+        }
+
+        // json 파일 디코딩
+        do {
+            let data = try Data(contentsOf: url)
+            
+            let decoder = JSONDecoder()
+            let adpData = try decoder.decode(ADPData.self, from: data)
+            
+            print(adpData)
+        } catch {
+            print("Error decoding JSON: \(error)")
+        }
     }
 }
 
