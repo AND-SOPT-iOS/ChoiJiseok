@@ -342,12 +342,33 @@ final class AppstoreDetailController: UIViewController {
         $0.backgroundColor = .white
         
         var config = UIButton.Configuration.plain()
-        config.attributedTitle = AttributedString(.makeAttributedString(text: "열기",
+        config.attributedTitle = AttributedString(.makeAttributedString(text: "더 보기",
                                                                         color: .systemBlue,
                                                                         font: UIFont.systemFont(ofSize: 16, weight: .regular)))
         config.contentInsets = .zero
         
         $0.configuration = config
+    }
+    
+    private let developerView = UIView()
+    
+    private let developerNameLabel = UILabel().then {
+        $0.attributedText = .makeAttributedString(text: "Viva Republica",
+                                                  color: .systemBlue,
+                                                  font: UIFont.systemFont(ofSize: 16, weight: .regular))
+    }
+    
+    private let developerTitleInfoLabel = UILabel().then {
+        $0.attributedText = .makeAttributedString(text: "개발자",
+                                                  color: .gray,
+                                                  font: UIFont.systemFont(ofSize: 14, weight: .regular))
+    }
+    
+    private let developerInfoArrowIconImageView = UIImageView().then {
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 20, weight: .medium)
+        $0.image = UIImage(systemName: "chevron.right", withConfiguration: imageConfig)
+        $0.tintColor = .gray
+        $0.contentMode = .scaleAspectFit
     }
     
     override func viewDidLoad() {
@@ -430,6 +451,12 @@ final class AppstoreDetailController: UIViewController {
                     appDetailInfoView.addSubViews(
                         appDetailInfoLabel,
                         appDetailInfoShowMoreButton
+                    ),
+                    // 개발자 정보 뷰
+                    developerView.addSubViews(
+                        developerNameLabel,
+                        developerTitleInfoLabel,
+                        developerInfoArrowIconImageView
                     )
                 )
             )
@@ -581,7 +608,7 @@ final class AppstoreDetailController: UIViewController {
             $0.left.right.equalToSuperview().inset(20)
         }
         
-        // 디테일 정보 텍스트가 3줄을 초과할 경우만 [열기] 버튼 노출
+        // 디테일 정보 텍스트가 3줄을 초과할 경우만 [더 보기] 버튼 노출
         if appDetailInfoLabel.isTextMoreThanLines(3) {
             appDetailInfoShowMoreButton.isHidden = false
         } else {
@@ -591,6 +618,24 @@ final class AppstoreDetailController: UIViewController {
         appDetailInfoShowMoreButton.snp.makeConstraints {
             $0.bottom.equalToSuperview().inset(20)
             $0.right.equalToSuperview().inset(20)
+        }
+        
+        // MARK: 개발자 정보 뷰
+        developerNameLabel.snp.makeConstraints {
+            $0.top.equalToSuperview().inset(4)
+            $0.left.equalToSuperview().inset(20)
+        }
+        
+        developerTitleInfoLabel.snp.makeConstraints {
+            $0.top.equalTo(developerNameLabel.snp.bottom).offset(3)
+            $0.left.equalToSuperview().inset(20)
+            $0.bottom.equalToSuperview().inset(12)
+        }
+        
+        developerInfoArrowIconImageView.snp.makeConstraints {
+            $0.right.equalToSuperview().inset(20)
+            $0.centerY.equalToSuperview()
+            $0.size.equalTo(20)
         }
     }
     
