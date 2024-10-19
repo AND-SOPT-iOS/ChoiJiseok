@@ -23,26 +23,8 @@ final class AppstoreDetailController: UIViewController {
     private let appShortInfoSwipeView = AppShortInfoSwipeView()
     
     private let appNewUpdateView = AppNewUpdateView()
-
     
-    private let previewView = UIView()
-    
-    private let previewInfoTitleView = UILabel().then {
-        $0.attributedText = .makeAttributedString(text: "미리 보기",
-                                                  color: .black,
-                                                  font: UIFont.systemFont(ofSize: 22, weight: .bold))
-    }
-    
-    private let previewImagesContainerView = UIView()
-    
-    private let firstPreviewImageView = UIImageView().then {
-        $0.image = UIImage(named: "toss_preview_1")
-        $0.contentMode = .scaleAspectFill
-        $0.layer.cornerRadius = 30
-        $0.clipsToBounds = true
-        $0.layer.borderWidth = 0.5
-        $0.layer.borderColor = UIColor.lightGray.cgColor
-    }
+    private let appPreviewsView = AppPreviewsView()
     
     private let compatibleDevicesView = UIView()
     
@@ -437,14 +419,9 @@ final class AppstoreDetailController: UIViewController {
                     appShortInfoSwipeView,
                     // 새로운 소식 뷰
                     appNewUpdateView,
-                    
                     // 앱 프리뷰 이미지 리스트 뷰
-                    previewView.addSubViews(
-                        previewInfoTitleView,
-                        previewImagesContainerView.addSubViews(
-                            firstPreviewImageView
-                        )
-                    ),
+                    appPreviewsView,
+                    
                     // 호환 기기 뷰
                     compatibleDevicesView.addSubViews(
                         compatibleDevicesContainerView.addSubViews(
@@ -520,30 +497,8 @@ final class AppstoreDetailController: UIViewController {
         
         containerStackView.setCustomSpacing(20, after: appTitleInfoView)
         containerStackView.setCustomSpacing(10, after: appShortInfoSwipeView)
-
-        
-        // MARK: 미리 보기
-        previewView.snp.makeConstraints {
-            $0.height.equalTo(520)
-        }
-        
-        previewInfoTitleView.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(24)
-            $0.height.equalTo(30)
-            $0.left.equalToSuperview().inset(20)
-        }
-        
-        previewImagesContainerView.snp.makeConstraints {
-            $0.top.equalTo(previewInfoTitleView.snp.bottom).offset(12)
-            $0.left.right.equalToSuperview()
-            $0.bottom.equalToSuperview()
-        }
-        
-        firstPreviewImageView.snp.makeConstraints {
-            $0.top.bottom.equalToSuperview()
-            $0.left.equalToSuperview().inset(20)
-            $0.width.equalTo(215)
-        }
+        containerStackView.setCustomSpacing(24, after: appNewUpdateView)
+    
         
         // MARK: 호환 기기 뷰
         compatibleDevicesView.snp.makeConstraints {
