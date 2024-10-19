@@ -22,48 +22,8 @@ final class AppstoreDetailController: UIViewController {
     
     private let appShortInfoSwipeView = AppShortInfoSwipeView()
     
-    private let newNoticeView = UIView()
-    
-    private let newNoticeButton = UIButton().then {
-        
-        var config = UIButton.Configuration.plain()
-        // 타이틀
-        config.attributedTitle = AttributedString(.makeAttributedString(text: "새로운 소식",
-                                                                        color: .black,
-                                                                        font: UIFont.systemFont(ofSize: 22,
-                                                                                                weight: .black)))
-        // 이미지
-        config.image = UIImage(systemName: "chevron.right")
-        config.imagePadding = 2
-        config.imagePlacement = .trailing
-        config.preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(pointSize: 14,
-                                                                                  weight: .heavy)
-        config.baseForegroundColor = .gray
-        // 상하좌우 패딩
-        config.contentInsets = .zero
-        
-        $0.configuration = config
-    }
-    
-    private let newAppVersionLabel = UILabel().then {
-        $0.attributedText = .makeAttributedString(text: "버전 5.185.0",
-                                                  color: .gray,
-                                                  font: UIFont.systemFont(ofSize: 16, weight: .regular))
-    }
-    
-    private let elapsedDaysLabel = UILabel().then {
-        $0.attributedText = .makeAttributedString(text: "1일 전",
-                                                  color: .gray,
-                                                  font: UIFont.systemFont(ofSize: 16, weight: .regular))
-    }
-    
-    private let versionChangeLogLabel = UILabel().then {
-        $0.numberOfLines = 0
-        $0.attributedText = .makeAttributedString(text: "• 구석구석 숨어있던 버그들을 잡았어요. 또 다른 버그가 나타나면 토스 고객센터를 찾아주세요. 늘 열려있답니다. 365일 24시간 언제든지요.",
-                                                  color: .black,
-                                                  font: UIFont.systemFont(ofSize: 16, weight: .regular),
-                                                  lineHeightMultiple: 1.4)
-    }
+    private let appNewUpdateView = AppNewUpdateView()
+
     
     private let previewView = UIView()
     
@@ -476,12 +436,8 @@ final class AppstoreDetailController: UIViewController {
                     // 앱 정보 수평 스크롤 뷰
                     appShortInfoSwipeView,
                     // 새로운 소식 뷰
-                    newNoticeView.addSubViews(
-                        newNoticeButton,
-                        newAppVersionLabel,
-                        elapsedDaysLabel,
-                        versionChangeLogLabel
-                    ),
+                    appNewUpdateView,
+                    
                     // 앱 프리뷰 이미지 리스트 뷰
                     previewView.addSubViews(
                         previewInfoTitleView,
@@ -563,30 +519,8 @@ final class AppstoreDetailController: UIViewController {
         }
         
         containerStackView.setCustomSpacing(20, after: appTitleInfoView)
-        
-        // MARK: 수평 스크롤 뷰
+        containerStackView.setCustomSpacing(10, after: appShortInfoSwipeView)
 
-        // MARK: 새로운 소식 뷰
-        newNoticeButton.snp.makeConstraints {
-            $0.top.equalToSuperview().inset(12)
-            $0.left.equalToSuperview().inset(20)
-        }
-        
-        newAppVersionLabel.snp.makeConstraints {
-            $0.top.equalTo(newNoticeButton.snp.bottom).offset(12)
-            $0.left.equalToSuperview().inset(20)
-        }
-        
-        elapsedDaysLabel.snp.makeConstraints {
-            $0.top.equalTo(newNoticeButton.snp.bottom).offset(12)
-            $0.right.equalToSuperview().inset(20)
-        }
-        
-        versionChangeLogLabel.snp.makeConstraints {
-            $0.top.equalTo(elapsedDaysLabel.snp.bottom).offset(10)
-            $0.left.right.equalToSuperview().inset(20)
-            $0.bottom.equalToSuperview().inset(12)
-        }
         
         // MARK: 미리 보기
         previewView.snp.makeConstraints {
