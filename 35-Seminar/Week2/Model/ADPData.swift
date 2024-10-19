@@ -11,7 +11,7 @@ import Foundation
 struct ADPData: Codable {
     let appTitleInfo: AppTitleInfo
     let appShortInfo: AppShortInfo
-    let notice: Notice
+    let appUpdates: AppUpdates
     let previewImages: PreviewImages
     let compatibleDevices: CompatibleDevices
     let appDetailInfo: AppDetailInfo
@@ -63,8 +63,8 @@ struct Language: Codable {
     let supportedLanguagesCount: Int
 }
 
-// MARK: - Notice
-struct Notice: Codable {
+// MARK: - AppUpdates
+struct AppUpdates: Codable {
     let version: String
     let elapsedDays: String
     let content: String

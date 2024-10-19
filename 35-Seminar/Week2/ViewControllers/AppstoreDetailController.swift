@@ -8,8 +8,15 @@
 import UIKit
 import SnapKit
 import Then
+import Combine
 
 final class AppstoreDetailController: UIViewController {
+    
+    // 모델
+    private var adpData = CurrentValueSubject<ADPData?, Never>(nil)
+    
+    private var cancellableBag = Set<AnyCancellable>()
+    
     
     private let containerScrollView = UIScrollView()
     
@@ -41,10 +48,11 @@ final class AppstoreDetailController: UIViewController {
         super.viewDidLoad()
         
         makeUI()
+        bindUI()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        loadData()
+        fetchMockData()
     }
     
     deinit {
@@ -99,7 +107,22 @@ final class AppstoreDetailController: UIViewController {
     }
     
     
-    private func loadData() {
+    private func bindUI() {
+        adpData.sink(receiveValue: { [weak self] data in
+            guard let self else { return }
+            
+            // 앱 타이틀
+            if let appTitleInfo = data?.appTitleInfo {
+                appTitleInfoView.setUI(with: appTitleInfo)
+                appTitleInfoView.isHidden = false
+            } else {
+                appTitleInfoView.isHidden = true
+            }
+        }).store(in: &cancellableBag)
+    }
+    
+    
+    private func fetchMockData() {
         // json 파일 경로
         guard let url = Bundle.main.url(forResource: "adp_mock", withExtension: "json") else {
             print("JSON file not found")
@@ -111,9 +134,12 @@ final class AppstoreDetailController: UIViewController {
             let data = try Data(contentsOf: url)
             
             let decoder = JSONDecoder()
-            let adpData = try decoder.decode(ADPData.self, from: data)
+            let decodedData = try decoder.decode(ADPData.self, from: data)
             
             print(adpData)
+            
+            // 데이터 세팅
+            adpData.send(decodedData)
         } catch {
             print("Error decoding JSON: \(error)")
         }

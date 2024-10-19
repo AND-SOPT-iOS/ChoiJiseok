@@ -19,7 +19,6 @@ class AppTitleInfoView: UIView {
     }
     
     private let appIconImageView = UIImageView().then {
-        $0.image = UIImage(named: "toss_icon")
         $0.contentMode = .scaleAspectFit
         $0.clipsToBounds = true
         $0.layer.cornerRadius = 25
@@ -27,22 +26,12 @@ class AppTitleInfoView: UIView {
         $0.layer.borderColor = UIColor.Week2ColorSet.logoImageBorderColor.cgColor
     }
     
-    private let titleLabel = UILabel().then {
-        $0.attributedText = .makeAttributedString(text: "토스",
-                                                  color: .black,
-                                                  font: UIFont.systemFont(ofSize: 22, weight: .semibold))
-    }
+    private let titleLabel = UILabel()
     
-    private let descriptionLabel = UILabel().then {
-        $0.attributedText = .makeAttributedString(text: "금융이 쉬워진다.",
-                                                  color: .lightGray,
-                                                  font: UIFont.systemFont(ofSize: 15, weight: .medium))
-    }
+    private let descriptionLabel = UILabel()
     
     private let downloadButton = UIButton().then {
         $0.backgroundColor = UIColor.Week2ColorSet.primaryBlue
-        $0.setTitle("열기", for: .normal)
-        $0.setTitleColor(.white, for: .normal)
         $0.setAttributedTitle(.makeAttributedString(text: "열기",
                                                     color: .white,
                                                     font: UIFont.systemFont(ofSize: 15, weight: .semibold)),
@@ -110,5 +99,31 @@ class AppTitleInfoView: UIView {
             $0.right.equalToSuperview()
             $0.bottom.equalTo(appIconImageView.snp.bottom)
         }
+    }
+    
+    
+    public func setUI(with data: AppTitleInfo) {
+        // UI 초기화
+        clearUI()
+        
+        // 아이콘 이미지 세팅
+        appIconImageView.image = UIImage(named: "toss_icon")
+        // 앱 타이틀 레이블 세팅
+        titleLabel.attributedText = .makeAttributedString(text: "토스",
+                                                          color: .black,
+                                                          font: UIFont.systemFont(ofSize: 22,
+                                                                                  weight: .semibold))
+        // 앱 설명 레이블 세팅
+        descriptionLabel.attributedText = .makeAttributedString(text: "금융이 쉬워진다.",
+                                                                color: .lightGray,
+                                                                font: UIFont.systemFont(ofSize: 15, 
+                                                                                        weight: .medium))
+    }
+    
+    
+    private func clearUI() {
+        appIconImageView.image = nil
+        titleLabel.attributedText = nil
+        descriptionLabel.attributedText = nil
     }
 }
