@@ -29,7 +29,7 @@ final class AppstoreDetailController: UIViewController {
     
     private let appShortInfoSwipeView = AppShortInfoSwipeView()
     
-    private let appNewUpdateView = AppNewUpdateView()
+    private let appNewUpdatesView = AppNewUpdatesView()
     
     private let appPreviewsView = AppPreviewsView()
     
@@ -70,7 +70,7 @@ final class AppstoreDetailController: UIViewController {
                     // 앱 정보 수평 스크롤 뷰
                     appShortInfoSwipeView,
                     // 앱 새로운 소식 뷰
-                    appNewUpdateView,
+                    appNewUpdatesView,
                     // 앱 프리뷰 이미지 리스트 뷰
                     appPreviewsView,
                     // 앱 호환 기기 뷰
@@ -98,7 +98,7 @@ final class AppstoreDetailController: UIViewController {
         
         containerStackView.setCustomSpacing(20, after: appTitleInfoView)
         containerStackView.setCustomSpacing(10, after: appShortInfoSwipeView)
-        containerStackView.setCustomSpacing(24, after: appNewUpdateView)
+        containerStackView.setCustomSpacing(24, after: appNewUpdatesView)
         containerStackView.setCustomSpacing(12, after: appPreviewsView)
         containerStackView.setCustomSpacing(20, after: appCompatibleDevicesView)
         containerStackView.setCustomSpacing(28, after: appDetailInfoView)
@@ -111,7 +111,7 @@ final class AppstoreDetailController: UIViewController {
         adpData.sink(receiveValue: { [weak self] data in
             guard let self else { return }
             
-            // 앱 타이틀
+            // (1) 앱 타이틀
             if let appTitleInfo = data?.appTitleInfo {
                 appTitleInfoView.setUI(with: appTitleInfo)
                 appTitleInfoView.isHidden = false
@@ -119,13 +119,30 @@ final class AppstoreDetailController: UIViewController {
                 appTitleInfoView.isHidden = true
             }
             
-            // 앱 요약 정보
+            // (2) 앱 요약 정보
             if let appShortInfo = data?.appShortInfo {
                 appShortInfoSwipeView.setUI(with: appShortInfo)
                 appShortInfoSwipeView.isHidden = false
             } else {
                 appShortInfoSwipeView.isHidden = true
             }            
+            
+            // (3) 앱 새로운 소식
+            if let appUpdates = data?.appUpdates {
+                appNewUpdatesView.setUI(with: appUpdates )
+                appNewUpdatesView.isHidden = false
+            } else {
+                appNewUpdatesView.isHidden = true
+            }
+            
+            // (4) 프리뷰 이미지
+            if let previewImages = data?.previewImages {
+                appPreviewsView.setUI(with: previewImages)
+                appPreviewsView.isHidden = false
+            } else {
+                appPreviewsView.isHidden = true
+            }
+            
         }).store(in: &cancellableBag)
     }
     

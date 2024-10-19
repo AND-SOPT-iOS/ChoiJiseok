@@ -1,5 +1,5 @@
 //
-//  AppNewNoticeView.swift
+//  AppNewUpdatesView.swift
 //  35-Seminar
 //
 //  Created by 최지석 on 10/19/24.
@@ -9,11 +9,11 @@ import UIKit
 import SnapKit
 import Then
 
-class AppNewUpdateView: UIView {
+class AppNewUpdatesView: UIView {
     
     private let containerView = UIView()
     
-    private let newNoticeButton = UIButton().then {
+    private let newUpdatesButton = UIButton().then {
         
         var config = UIButton.Configuration.plain()
         // 타이틀
@@ -34,24 +34,12 @@ class AppNewUpdateView: UIView {
         $0.configuration = config
     }
     
-    private let newAppVersionLabel = UILabel().then {
-        $0.attributedText = .makeAttributedString(text: "버전 5.185.0",
-                                                  color: .gray,
-                                                  font: UIFont.systemFont(ofSize: 16, weight: .regular))
-    }
+    private let newAppVersionLabel = UILabel()
     
-    private let elapsedDaysLabel = UILabel().then {
-        $0.attributedText = .makeAttributedString(text: "1일 전",
-                                                  color: .gray,
-                                                  font: UIFont.systemFont(ofSize: 16, weight: .regular))
-    }
+    private let elapsedDaysLabel = UILabel()
     
     private let versionChangeLogLabel = UILabel().then {
         $0.numberOfLines = 0
-        $0.attributedText = .makeAttributedString(text: "• 구석구석 숨어있던 버그들을 잡았어요. 또 다른 버그가 나타나면 토스 고객센터를 찾아주세요. 늘 열려있답니다. 365일 24시간 언제든지요.",
-                                                  color: .black,
-                                                  font: UIFont.systemFont(ofSize: 16, weight: .regular),
-                                                  lineHeightMultiple: 1.4)
     }
     
     
@@ -70,7 +58,7 @@ class AppNewUpdateView: UIView {
         
         addSubview(
             containerView.addSubViews(
-                newNoticeButton,
+                newUpdatesButton,
                 newAppVersionLabel,
                 elapsedDaysLabel,
                 versionChangeLogLabel
@@ -82,18 +70,18 @@ class AppNewUpdateView: UIView {
             $0.horizontalEdges.equalToSuperview().inset(20)
         }
         
-        newNoticeButton.snp.makeConstraints {
+        newUpdatesButton.snp.makeConstraints {
             $0.top.equalToSuperview()
             $0.left.equalToSuperview()
         }
         
         newAppVersionLabel.snp.makeConstraints {
-            $0.top.equalTo(newNoticeButton.snp.bottom).offset(12)
+            $0.top.equalTo(newUpdatesButton.snp.bottom).offset(12)
             $0.left.equalToSuperview()
         }
         
         elapsedDaysLabel.snp.makeConstraints {
-            $0.top.equalTo(newNoticeButton.snp.bottom).offset(12)
+            $0.top.equalTo(newUpdatesButton.snp.bottom).offset(12)
             $0.right.equalToSuperview()
         }
         
@@ -102,5 +90,37 @@ class AppNewUpdateView: UIView {
             $0.left.right.equalToSuperview()
             $0.bottom.equalToSuperview()
         }
+    }
+    
+    
+    public func setUI(with data: AppUpdates) {
+        
+        clearUI()
+        
+        guard let appVersion = data.version,
+              let elapsedDays = data.elapsedDays,
+              let changeLog = data.content else { return }
+        
+        // 앱 버전 레이블 세팅
+        newAppVersionLabel.attributedText = .makeAttributedString(text: "버전 \(appVersion)",
+                                                                  color: .gray,
+                                                                  font: UIFont.systemFont(ofSize: 16, weight: .regular))
+        
+        // 앱 배포 경과 일자 레이블 세팅
+        elapsedDaysLabel.attributedText = .makeAttributedString(text: elapsedDays,
+                                                                color: .gray,
+                                                                font: UIFont.systemFont(ofSize: 16, weight: .regular))
+        
+        // 앱 버전 체인지 로그 레이블 세팅
+        versionChangeLogLabel.attributedText = .makeAttributedString(text: changeLog,
+                                                  color: .black,
+                                                  font: UIFont.systemFont(ofSize: 16, weight: .regular),
+                                                  lineHeightMultiple: 1.4)
+    }
+    
+    public func clearUI() {
+        newAppVersionLabel.attributedText = nil
+        elapsedDaysLabel.attributedText = nil
+        versionChangeLogLabel.attributedText = nil
     }
 }

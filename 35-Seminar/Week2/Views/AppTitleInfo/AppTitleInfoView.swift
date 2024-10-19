@@ -106,15 +106,19 @@ class AppTitleInfoView: UIView {
         // UI 초기화
         clearUI()
         
+        guard let appIconUrl = data.appIconUrl,
+              let appName = data.appName,
+              let appDescription = data.appDescription else { return }
+        
         // 아이콘 이미지 세팅
-        appIconImageView.image = UIImage(named: "toss_icon")
+        appIconImageView.image = UIImage(named: appIconUrl)
         // 앱 타이틀 레이블 세팅
-        titleLabel.attributedText = .makeAttributedString(text: "토스",
+        titleLabel.attributedText = .makeAttributedString(text: appName,
                                                           color: .black,
                                                           font: UIFont.systemFont(ofSize: 22,
                                                                                   weight: .semibold))
         // 앱 설명 레이블 세팅
-        descriptionLabel.attributedText = .makeAttributedString(text: "금융이 쉬워진다.",
+        descriptionLabel.attributedText = .makeAttributedString(text: appDescription,
                                                                 color: .lightGray,
                                                                 font: UIFont.systemFont(ofSize: 15, 
                                                                                         weight: .medium))

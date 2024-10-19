@@ -21,6 +21,7 @@ struct ADPData: Codable {
 
 // MARK: - AppTitleInfo
 struct AppTitleInfo: Codable {
+    let appIconUrl: String?
     let appName: String?
     let appDescription: String?
 }
