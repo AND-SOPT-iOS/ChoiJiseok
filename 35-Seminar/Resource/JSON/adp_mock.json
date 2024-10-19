@@ -6,13 +6,14 @@
   "appShortInfo": {
     "evaluation": {
       "totalReviews": 84000,
-      "averageRating": 4.4
+      "averageRating": 4.4,
+      "maxRating": 5.0
     },
     "awards": {
       "awardImageUrl": "person"
     },
     "age": {
-      "minimumAgeTitle": 4
+      "minAge": 4
     },
     "chart": {
       "ranking": 3,
@@ -47,6 +48,7 @@
   },
   "ratingAndReviews": {
     "averageRating": 4.4,
+    "maxRating": 5.0,
     "totalReviews": 84000,
     "mostHelpfulReviews": [
       {

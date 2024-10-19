@@ -118,6 +118,14 @@ final class AppstoreDetailController: UIViewController {
             } else {
                 appTitleInfoView.isHidden = true
             }
+            
+            // 앱 요약 정보
+            if let appShortInfo = data?.appShortInfo {
+                appShortInfoSwipeView.setUI(with: appShortInfo)
+                appShortInfoSwipeView.isHidden = false
+            } else {
+                appShortInfoSwipeView.isHidden = true
+            }            
         }).store(in: &cancellableBag)
     }
     

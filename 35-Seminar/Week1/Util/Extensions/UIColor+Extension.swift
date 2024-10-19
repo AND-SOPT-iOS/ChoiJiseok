@@ -27,5 +27,6 @@ extension UIColor {
         public static let logoImageBorderColor = UIColor(hex: 0xE8E8E8)
         public static let primaryBlue = UIColor.systemBlue
         public static let buttonBackgroundLightGray = UIColor(hex: 0xF2F2F2)
+        public static let borderGray = UIColor(hex: 0xE0E0E0)
     }
 }
