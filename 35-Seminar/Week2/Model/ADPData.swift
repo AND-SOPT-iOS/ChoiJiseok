@@ -96,11 +96,12 @@ struct DeveloperInfo: Codable {
 // MARK: - RatingAndReviews
 struct RatingAndReviews: Codable {
     let averageRating: Double?
+    let maxRating: Double?
     let totalReviews: Int?
-    let mostHelpfulReviews: [MostHelpfulReview]?
+    let mostHelpfulReviews: [UserReview]?
 }
 
-struct MostHelpfulReview: Codable {
+struct UserReview: Codable {
     let title: String?
     let userRating: Double?
     let maxRating: Double?

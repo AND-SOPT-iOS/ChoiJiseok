@@ -109,10 +109,11 @@ final class AppstoreDetailController: UIViewController {
     
     private func bindUI() {
         adpData.sink(receiveValue: { [weak self] data in
-            guard let self else { return }
+            guard let self,
+                  let data else { return }
             
             // (1) 앱 타이틀
-            if let appTitleInfo = data?.appTitleInfo {
+            if let appTitleInfo = data.appTitleInfo {
                 appTitleInfoView.setUI(with: appTitleInfo)
                 appTitleInfoView.isHidden = false
             } else {
@@ -120,7 +121,7 @@ final class AppstoreDetailController: UIViewController {
             }
             
             // (2) 앱 요약 정보
-            if let appShortInfo = data?.appShortInfo {
+            if let appShortInfo = data.appShortInfo {
                 appShortInfoSwipeView.setUI(with: appShortInfo)
                 appShortInfoSwipeView.isHidden = false
             } else {
@@ -128,7 +129,7 @@ final class AppstoreDetailController: UIViewController {
             }
             
             // (3) 앱 새로운 소식
-            if let appUpdates = data?.appUpdates {
+            if let appUpdates = data.appUpdates {
                 appNewUpdatesView.setUI(with: appUpdates )
                 appNewUpdatesView.isHidden = false
             } else {
@@ -136,7 +137,7 @@ final class AppstoreDetailController: UIViewController {
             }
             
             // (4) 프리뷰 이미지
-            if let previewImages = data?.previewImages {
+            if let previewImages = data.previewImages {
                 appPreviewsView.setUI(with: previewImages)
                 appPreviewsView.isHidden = false
             } else {
@@ -144,7 +145,7 @@ final class AppstoreDetailController: UIViewController {
             }
             
             // (5) 호환 기기
-            if let compatibleDevices = data?.compatibleDevices {
+            if let compatibleDevices = data.compatibleDevices {
                 appCompatibleDevicesView.setUI(with: compatibleDevices)
                 appCompatibleDevicesView.isHidden = false
             } else {
@@ -152,13 +153,20 @@ final class AppstoreDetailController: UIViewController {
             }
             
             // (6) 개발자 정보
-            if let developerInfo = data?.developerInfo {
+            if let developerInfo = data.developerInfo {
                 appDeveloperView.setUI(with: developerInfo)
                 appDeveloperView.isHidden = false
             } else {
                 appDeveloperView.isHidden = true
             }
             
+            // (7) 평점 및 사용자 리뷰
+            if let ratingAndReviews = data.ratingAndReviews {
+                appRatingAndReviewsView.setUI(with: ratingAndReviews)
+                appRatingAndReviewsView.isHidden = false
+            } else {
+                appRatingAndReviewsView.isHidden = true
+            }
         }).store(in: &cancellableBag)
     }
     
