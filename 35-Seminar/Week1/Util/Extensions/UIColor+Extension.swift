@@ -26,5 +26,6 @@ extension UIColor {
     public enum Week2ColorSet {
         public static let logoImageBorderColor = UIColor(hex: 0xE8E8E8)
         public static let primaryBlue = UIColor.systemBlue
+        public static let buttonBackgroundLightGray = UIColor(hex: 0xF2F2F2)
     }
 }

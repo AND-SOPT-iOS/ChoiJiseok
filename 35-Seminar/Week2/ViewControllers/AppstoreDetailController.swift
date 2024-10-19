@@ -439,7 +439,7 @@ final class AppstoreDetailController: UIViewController {
         $0.layer.shadowColor = UIColor.gray.cgColor
         $0.layer.shadowRadius = 6
         $0.layer.shadowOffset = CGSize(width: 0, height: 4)
-        $0.layer.shadowOpacity = 0.3
+        $0.layer.shadowOpacity = 0.4
         $0.layer.masksToBounds = false
         
         $0.layer.cornerRadius = 16
@@ -479,7 +479,113 @@ final class AppstoreDetailController: UIViewController {
         $0.numberOfLines = 0
     }
     
+    private let selfRatingAndReviewView = UIView()
     
+    private let selfRatingAndReviewTitleInfoLabel = UILabel().then {
+        $0.attributedText = .makeAttributedString(text: "탭하여 평가하기",
+                                                  color: .black,
+                                                  font: UIFont.systemFont(ofSize: 18, weight: .regular))
+    }
+    
+    private let selfRatingStarIconsStackView = UIStackView().then {
+        $0.axis = .horizontal
+        $0.alignment = .center
+        $0.spacing = 10
+    }
+    
+    private let selfRatingFirstStarIconButton = UIButton().then {
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .semibold)
+        let image = UIImage(systemName: "star", withConfiguration: imageConfig)
+        $0.setImage(image, for: .normal)
+        $0.tintColor = .systemBlue
+        $0.contentMode = .scaleAspectFit
+    }
+    
+    private let selfRatingSecondStarIconButton = UIButton().then {
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .semibold)
+        let image = UIImage(systemName: "star", withConfiguration: imageConfig)
+        $0.setImage(image, for: .normal)
+        $0.tintColor = .systemBlue
+        $0.contentMode = .scaleAspectFit
+    }
+    
+    private let selfRatingThirdStarIconButton = UIButton().then {
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .semibold)
+        let image = UIImage(systemName: "star", withConfiguration: imageConfig)
+        $0.setImage(image, for: .normal)
+        $0.tintColor = .systemBlue
+        $0.contentMode = .scaleAspectFit
+    }
+    
+    private let selfRatingFourthStarIconButton = UIButton().then {
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .semibold)
+        let image = UIImage(systemName: "star", withConfiguration: imageConfig)
+        $0.setImage(image, for: .normal)
+        $0.tintColor = .systemBlue
+        $0.contentMode = .scaleAspectFit
+    }
+    
+    private let selfRatingFifthStarIconButton = UIButton().then {
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .semibold)
+        let image = UIImage(systemName: "star", withConfiguration: imageConfig)
+        $0.setImage(image, for: .normal)
+        $0.tintColor = .systemBlue
+        $0.contentMode = .scaleAspectFit
+    }
+    
+    private let selfRatingButtonsStackView = UIStackView().then {
+        $0.axis = .horizontal
+        $0.alignment = .fill
+        $0.spacing = 12
+    }
+    
+    private let selfReviewWritingButton = UIButton().then {
+
+        var config = UIButton.Configuration.filled()
+        // 타이틀
+        config.attributedTitle = AttributedString(.makeAttributedString(text: "리뷰 작성",
+                                                                        color: .systemBlue,
+                                                                        font: UIFont.systemFont(ofSize: 16,
+                                                                                                weight: .semibold)))
+        // 이미지
+        config.image = UIImage(systemName: "square.and.pencil")
+        config.imagePadding = 4
+        config.imagePlacement = .leading
+        config.preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(pointSize: 12,
+                                                                                  weight: .semibold)
+        config.baseForegroundColor = .systemBlue
+        config.baseBackgroundColor = UIColor.Week2ColorSet.buttonBackgroundLightGray
+
+        $0.configuration = config
+        
+        // 커스텀 코너 반경 설정
+        $0.layer.cornerRadius = 16
+        $0.clipsToBounds = true
+    }
+    
+    private let appSupportButton = UIButton().then {
+
+        var config = UIButton.Configuration.filled()
+        // 타이틀
+        config.attributedTitle = AttributedString(.makeAttributedString(text: "앱 지원",
+                                                                        color: .systemBlue,
+                                                                        font: UIFont.systemFont(ofSize: 16,
+                                                                                                weight: .semibold)))
+        // 이미지
+        config.image = UIImage(systemName: "questionmark.circle")
+        config.imagePadding = 4
+        config.imagePlacement = .leading
+        config.preferredSymbolConfigurationForImage = UIImage.SymbolConfiguration(pointSize: 12,
+                                                                                  weight: .semibold)
+        config.baseForegroundColor = .systemBlue
+        config.baseBackgroundColor = UIColor.Week2ColorSet.buttonBackgroundLightGray
+
+        $0.configuration = config
+        
+        // 커스텀 코너 반경 설정
+        $0.layer.cornerRadius = 16
+        $0.clipsToBounds = true
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -591,6 +697,21 @@ final class AppstoreDetailController: UIViewController {
                                 userReviewDateAndNameLabel,
                                 userReviewLabel
                             )
+                        )
+                    ),
+                    // 셀프 평가 뷰
+                    selfRatingAndReviewView.addSubViews(
+                        selfRatingAndReviewTitleInfoLabel,
+                        selfRatingStarIconsStackView.addArrangedSubViews(
+                            selfRatingFirstStarIconButton,
+                            selfRatingSecondStarIconButton,
+                            selfRatingThirdStarIconButton,
+                            selfRatingFourthStarIconButton,
+                            selfRatingFifthStarIconButton
+                        ),
+                        selfRatingButtonsStackView.addArrangedSubViews(
+                            selfReviewWritingButton,
+                            appSupportButton
                         )
                     )
                 )
@@ -813,7 +934,7 @@ final class AppstoreDetailController: UIViewController {
         userReviewView.snp.makeConstraints {
             $0.top.equalTo(mostHelpfulReviewTitleInfoLabel.snp.bottom)
             $0.left.right.equalToSuperview()
-            $0.bottom.equalToSuperview().inset(20)
+            $0.bottom.equalToSuperview().inset(16)
         }
         
         userReviewCell.snp.makeConstraints {
@@ -854,6 +975,24 @@ final class AppstoreDetailController: UIViewController {
             $0.top.equalTo(userReviewDateAndNameLabel.snp.bottom).offset(8)
             $0.left.right.equalToSuperview().inset(20)
             $0.bottom.lessThanOrEqualToSuperview().inset(20)
+        }
+        
+        // MARK: 사용자 본인 리뷰 및 평가 셀
+        selfRatingAndReviewTitleInfoLabel.snp.makeConstraints {
+            $0.top.equalToSuperview()
+            $0.centerX.equalToSuperview()
+        }
+        
+        selfRatingStarIconsStackView.snp.makeConstraints {
+            $0.top.equalTo(selfRatingAndReviewTitleInfoLabel.snp.bottom).offset(10)
+            $0.centerX.equalToSuperview()
+        }
+        
+        selfRatingButtonsStackView.snp.makeConstraints {
+            $0.top.equalTo(selfRatingStarIconsStackView.snp.bottom).offset(24)
+            $0.left.right.equalToSuperview().inset(20)
+            $0.height.equalTo(52)
+            $0.bottom.equalToSuperview()
         }
     }
     
