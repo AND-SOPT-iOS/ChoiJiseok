@@ -17,7 +17,7 @@ class AppRatingAndReviewsView: UIView {
         $0.spacing = 12
         $0.insetsLayoutMarginsFromSafeArea = false
         $0.isLayoutMarginsRelativeArrangement = true
-        $0.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 20, trailing: 0)
+        $0.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 22, trailing: 0)
     }
     
     private let ratingContainerView = UIView()

@@ -16,7 +16,7 @@ class AppSelfRatingAndReviewView: UIView {
     private let selfRatingAndReviewTitleInfoLabel = UILabel().then {
         $0.attributedText = .makeAttributedString(text: "탭하여 평가하기",
                                                   color: .black,
-                                                  font: UIFont.systemFont(ofSize: 18, weight: .regular))
+                                                  font: UIFont.systemFont(ofSize: 18, weight: .medium))
     }
     
     private let selfRatingStarIconsStackView = UIStackView().then {
@@ -25,42 +25,47 @@ class AppSelfRatingAndReviewView: UIView {
         $0.spacing = 10
     }
     
-    private let selfRatingFirstStarIconButton = UIButton().then {
+    private let firstStarIconButton = UIButton().then {
         let imageConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .semibold)
         let image = UIImage(systemName: "star", withConfiguration: imageConfig)
         $0.setImage(image, for: .normal)
+        $0.setImage(image, for: .highlighted)
         $0.tintColor = .systemBlue
         $0.contentMode = .scaleAspectFit
     }
     
-    private let selfRatingSecondStarIconButton = UIButton().then {
+    private let secondStarIconButton = UIButton().then {
         let imageConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .semibold)
         let image = UIImage(systemName: "star", withConfiguration: imageConfig)
         $0.setImage(image, for: .normal)
+        $0.setImage(image, for: .highlighted)
         $0.tintColor = .systemBlue
         $0.contentMode = .scaleAspectFit
     }
     
-    private let selfRatingThirdStarIconButton = UIButton().then {
+    private let thirdStarIconButton = UIButton().then {
         let imageConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .semibold)
         let image = UIImage(systemName: "star", withConfiguration: imageConfig)
         $0.setImage(image, for: .normal)
+        $0.setImage(image, for: .highlighted)
         $0.tintColor = .systemBlue
         $0.contentMode = .scaleAspectFit
     }
     
-    private let selfRatingFourthStarIconButton = UIButton().then {
+    private let fourthStarIconButton = UIButton().then {
         let imageConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .semibold)
         let image = UIImage(systemName: "star", withConfiguration: imageConfig)
         $0.setImage(image, for: .normal)
+        $0.setImage(image, for: .highlighted)
         $0.tintColor = .systemBlue
         $0.contentMode = .scaleAspectFit
     }
     
-    private let selfRatingFifthStarIconButton = UIButton().then {
+    private let fifthStarIconButton = UIButton().then {
         let imageConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .semibold)
         let image = UIImage(systemName: "star", withConfiguration: imageConfig)
         $0.setImage(image, for: .normal)
+        $0.setImage(image, for: .highlighted)
         $0.tintColor = .systemBlue
         $0.contentMode = .scaleAspectFit
     }
@@ -123,6 +128,7 @@ class AppSelfRatingAndReviewView: UIView {
         super.init(frame: frame)
         
         makeUI()
+        bindAction()
     }
     
     required init?(coder: NSCoder) {
@@ -136,11 +142,11 @@ class AppSelfRatingAndReviewView: UIView {
             containerView.addSubViews(
                 selfRatingAndReviewTitleInfoLabel,
                 selfRatingStarIconsStackView.addArrangedSubViews(
-                    selfRatingFirstStarIconButton,
-                    selfRatingSecondStarIconButton,
-                    selfRatingThirdStarIconButton,
-                    selfRatingFourthStarIconButton,
-                    selfRatingFifthStarIconButton
+                    firstStarIconButton,
+                    secondStarIconButton,
+                    thirdStarIconButton,
+                    fourthStarIconButton,
+                    fifthStarIconButton
                 ),
                 selfRatingButtonsStackView.addArrangedSubViews(
                     selfReviewWritingButton,
@@ -166,11 +172,109 @@ class AppSelfRatingAndReviewView: UIView {
         
         selfRatingButtonsStackView.snp.makeConstraints {
             $0.top.equalTo(selfRatingStarIconsStackView.snp.bottom).offset(24)
-            $0.left.right.equalToSuperview().inset(20)
+            $0.left.right.equalToSuperview()
             $0.height.equalTo(52)
             $0.bottom.equalToSuperview()
         }
-
+    }
+    
+    
+    private func bindAction() {
+        firstStarIconButton.addTarget(self, action: #selector(firstStarIconButtonIsPressed), for: [.touchUpInside])
+        secondStarIconButton.addTarget(self, action: #selector(secondStarIconButtonIsPressed), for: [.touchUpInside])
+        thirdStarIconButton.addTarget(self, action: #selector(thirdStarIconButtonIsPressed), for: [.touchUpInside])
+        fourthStarIconButton.addTarget(self, action: #selector(fourthStarIconButtonIsPressed), for: [.touchUpInside])
+        fifthStarIconButton.addTarget(self, action: #selector(fifthStarIconButtonIsPressed), for: [.touchUpInside])
+    }
+    
+    
+    @objc private func firstStarIconButtonIsPressed() {
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .semibold)
+        let starIcon = UIImage(systemName: "star", withConfiguration: imageConfig)
+        let filledStarIcon = UIImage(systemName: "star.fill", withConfiguration: imageConfig)
+        
+        firstStarIconButton.setImage(filledStarIcon, for: .normal)
+        firstStarIconButton.setImage(filledStarIcon, for: .highlighted)
+        secondStarIconButton.setImage(starIcon, for: .normal)
+        secondStarIconButton.setImage(starIcon, for: .highlighted)
+        thirdStarIconButton.setImage(starIcon, for: .normal)
+        thirdStarIconButton.setImage(starIcon, for: .highlighted)
+        fourthStarIconButton.setImage(starIcon, for: .normal)
+        fourthStarIconButton.setImage(starIcon, for: .highlighted)
+        fifthStarIconButton.setImage(starIcon, for: .normal)
+        fourthStarIconButton.setImage(starIcon, for: .highlighted)
+    }
+    
+    
+    @objc private func secondStarIconButtonIsPressed() {
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .semibold)
+        let starIcon = UIImage(systemName: "star", withConfiguration: imageConfig)
+        let filledStarIcon = UIImage(systemName: "star.fill", withConfiguration: imageConfig)
+        
+        firstStarIconButton.setImage(filledStarIcon, for: .normal)
+        firstStarIconButton.setImage(filledStarIcon, for: .highlighted)
+        secondStarIconButton.setImage(filledStarIcon, for: .normal)
+        secondStarIconButton.setImage(filledStarIcon, for: .highlighted)
+        thirdStarIconButton.setImage(starIcon, for: .normal)
+        thirdStarIconButton.setImage(starIcon, for: .highlighted)
+        fourthStarIconButton.setImage(starIcon, for: .normal)
+        fourthStarIconButton.setImage(starIcon, for: .highlighted)
+        fifthStarIconButton.setImage(starIcon, for: .normal)
+        fourthStarIconButton.setImage(starIcon, for: .highlighted)
+    }
+    
+    
+    @objc private func thirdStarIconButtonIsPressed() {
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .semibold)
+        let starIcon = UIImage(systemName: "star", withConfiguration: imageConfig)
+        let filledStarIcon = UIImage(systemName: "star.fill", withConfiguration: imageConfig)
+        
+        firstStarIconButton.setImage(filledStarIcon, for: .normal)
+        firstStarIconButton.setImage(filledStarIcon, for: .highlighted)
+        secondStarIconButton.setImage(filledStarIcon, for: .normal)
+        secondStarIconButton.setImage(filledStarIcon, for: .highlighted)
+        thirdStarIconButton.setImage(filledStarIcon, for: .normal)
+        thirdStarIconButton.setImage(filledStarIcon, for: .highlighted)
+        fourthStarIconButton.setImage(starIcon, for: .normal)
+        fourthStarIconButton.setImage(starIcon, for: .highlighted)
+        fifthStarIconButton.setImage(starIcon, for: .normal)
+        fourthStarIconButton.setImage(starIcon, for: .highlighted)
+    }
+    
+    
+    @objc private func fourthStarIconButtonIsPressed() {
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .semibold)
+        let starIcon = UIImage(systemName: "star", withConfiguration: imageConfig)
+        let filledStarIcon = UIImage(systemName: "star.fill", withConfiguration: imageConfig)
+        
+        firstStarIconButton.setImage(filledStarIcon, for: .normal)
+        firstStarIconButton.setImage(filledStarIcon, for: .highlighted)
+        secondStarIconButton.setImage(filledStarIcon, for: .normal)
+        secondStarIconButton.setImage(filledStarIcon, for: .highlighted)
+        thirdStarIconButton.setImage(filledStarIcon, for: .normal)
+        thirdStarIconButton.setImage(filledStarIcon, for: .highlighted)
+        fourthStarIconButton.setImage(filledStarIcon, for: .normal)
+        fourthStarIconButton.setImage(filledStarIcon, for: .highlighted)
+        fifthStarIconButton.setImage(starIcon, for: .normal)
+        fourthStarIconButton.setImage(starIcon, for: .highlighted)
+    }
+    
+    
+    @objc private func fifthStarIconButtonIsPressed() {
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .semibold)
+        let starIcon = UIImage(systemName: "star", withConfiguration: imageConfig)
+        let filledStarIcon = UIImage(systemName: "star.fill", withConfiguration: imageConfig)
+        
+        firstStarIconButton.setImage(filledStarIcon, for: .normal)
+        firstStarIconButton.setImage(filledStarIcon, for: .highlighted)
+        secondStarIconButton.setImage(filledStarIcon, for: .normal)
+        secondStarIconButton.setImage(filledStarIcon, for: .highlighted)
+        thirdStarIconButton.setImage(filledStarIcon, for: .normal)
+        thirdStarIconButton.setImage(filledStarIcon, for: .highlighted)
+        fourthStarIconButton.setImage(filledStarIcon, for: .normal)
+        fourthStarIconButton.setImage(filledStarIcon, for: .highlighted)
+        fifthStarIconButton.setImage(filledStarIcon, for: .normal)
+        fourthStarIconButton.setImage(filledStarIcon, for: .highlighted)
     }
 }
 
