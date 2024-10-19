@@ -21,18 +21,7 @@ class AppCompatibleDevicesView: UIView {
         $0.spacing = 10
     }
     
-    private let compatibleDeviceIconImageView = UIImageView().then {
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 18, weight: .regular)
-        $0.image = UIImage(systemName: "iphone", withConfiguration: imageConfig)
-        $0.tintColor = .lightGray
-        $0.contentMode = .scaleAspectFit
-    }
-    
-    private let compatibleDeviceNameLabel = UILabel().then {
-        $0.attributedText = .makeAttributedString(text: "iPhone",
-                                                  color: .gray,
-                                                  font: UIFont.systemFont(ofSize: 14, weight: .medium))
-    }
+    private let compatibleDeviceNameLabel = UILabel()
     
     
     override init(frame: CGRect) {
@@ -51,9 +40,7 @@ class AppCompatibleDevicesView: UIView {
         addSubview(
             containerView.addSubViews(
                 compatibleDevicesContainerView.addSubViews(
-                    compatibleDeviceIconImagesStackView.addArrangedSubViews(
-                        compatibleDeviceIconImageView
-                    ),
+                    compatibleDeviceIconImagesStackView,
                     compatibleDeviceNameLabel
                 )
             )
@@ -74,16 +61,67 @@ class AppCompatibleDevicesView: UIView {
             $0.left.equalToSuperview()
         }
         
-        compatibleDeviceIconImageView.snp.makeConstraints {
-            $0.size.equalTo(20)
-        }
+        
         
         compatibleDeviceNameLabel.snp.makeConstraints {
             $0.left.equalTo(compatibleDeviceIconImagesStackView.snp.right).offset(10)
-            $0.centerY.equalTo(compatibleDeviceIconImageView.snp.centerY)
+            $0.centerY.equalTo(compatibleDeviceIconImagesStackView.snp.centerY)
             $0.right.equalToSuperview().inset(20)
             $0.height.equalTo(20)
         }
     }
-
+    
+    
+    public func setUI(with data: CompatibleDevices) {
+        
+        clearUI()
+        
+        guard let deviceIcons = data.deviceIcons, !deviceIcons.isEmpty,
+              let deviceNames = data.deviceNames, !deviceNames.isEmpty else { return }
+        
+        
+        // 디바이스 아이콘 세팅
+        for deviceIcon in deviceIcons {
+            let compatibleDeviceIconImageView = UIImageView().then {
+                let imageConfig = UIImage.SymbolConfiguration(pointSize: 18, weight: .regular)
+                $0.image = UIImage(systemName: deviceIcon, withConfiguration: imageConfig)
+                $0.tintColor = .lightGray
+                $0.contentMode = .scaleAspectFit
+            }
+            
+            compatibleDeviceIconImageView.snp.makeConstraints {
+                $0.size.equalTo(20)
+            }
+            
+            compatibleDeviceIconImagesStackView.addArrangedSubview(compatibleDeviceIconImageView)
+        }
+        
+        // 디바이스 이름 레이블 세팅
+        var deviceNamesString = ""
+        
+        for (index, deviceName) in deviceNames.enumerated() {
+            // 마지막 디바이스가 아닌 경우
+            if index < deviceNames.count - 1 {
+                deviceNamesString.append(deviceName)
+                deviceNamesString.append(",  ")
+            }
+            // 마지막 디바이스인 경우
+            else {
+                deviceNamesString.append(deviceName)
+            }
+        }
+        
+        compatibleDeviceNameLabel.attributedText = .makeAttributedString(text: deviceNamesString,
+                                                                         color: .gray,
+                                                                         font: UIFont.systemFont(ofSize: 14, weight: .medium))
+    }
+    
+    
+    private func clearUI() {
+        for subview in compatibleDeviceIconImagesStackView.arrangedSubviews {
+            subview.removeFromSuperview()
+        }
+        
+        compatibleDeviceNameLabel.attributedText = nil
+    }
 }

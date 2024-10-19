@@ -125,7 +125,7 @@ final class AppstoreDetailController: UIViewController {
                 appShortInfoSwipeView.isHidden = false
             } else {
                 appShortInfoSwipeView.isHidden = true
-            }            
+            }
             
             // (3) 앱 새로운 소식
             if let appUpdates = data?.appUpdates {
@@ -141,6 +141,22 @@ final class AppstoreDetailController: UIViewController {
                 appPreviewsView.isHidden = false
             } else {
                 appPreviewsView.isHidden = true
+            }
+            
+            // (5) 호환 기기
+            if let compatibleDevices = data?.compatibleDevices {
+                appCompatibleDevicesView.setUI(with: compatibleDevices)
+                appCompatibleDevicesView.isHidden = false
+            } else {
+                appCompatibleDevicesView.isHidden = true
+            }
+            
+            // (6) 개발자 정보
+            if let developerInfo = data?.developerInfo {
+                appDeveloperView.setUI(with: developerInfo)
+                appDeveloperView.isHidden = false
+            } else {
+                appDeveloperView.isHidden = true
             }
             
         }).store(in: &cancellableBag)

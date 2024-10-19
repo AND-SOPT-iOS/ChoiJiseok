@@ -13,11 +13,7 @@ class AppDeveloperView: UIView {
     
     private let containerView = UIView()
 
-    private let developerNameLabel = UILabel().then {
-        $0.attributedText = .makeAttributedString(text: "Viva Republica",
-                                                  color: .systemBlue,
-                                                  font: UIFont.systemFont(ofSize: 16, weight: .regular))
-    }
+    private let developerNameLabel = UILabel()
 
     private let developerTitleInfoLabel = UILabel().then {
         $0.attributedText = .makeAttributedString(text: "개발자",
@@ -74,5 +70,23 @@ class AppDeveloperView: UIView {
             $0.centerY.equalToSuperview()
             $0.size.equalTo(20)
         }
+    }
+    
+    
+    public func setUI(with data: DeveloperInfo) {
+        
+        clearUI()
+        
+        guard let developerName = data.developerName else { return }
+        
+        // 개발자 이름 세팅
+        developerNameLabel.attributedText = .makeAttributedString(text: developerName,
+                                                                  color: .systemBlue,
+                                                                  font: UIFont.systemFont(ofSize: 16, weight: .regular))
+    }
+    
+    
+    private func clearUI() {
+        developerNameLabel.attributedText = nil
     }
 }
