@@ -134,11 +134,8 @@ class AppTitleInfoView: UIView {
     
     
     public func showInnerSubviews(_ shouldShowInnerViews: Bool) {
-        UIView.animate(withDuration: 0.5) { [weak self] in
-            guard let self else { return }
-            for subview in containerView.subviews {
-                subview.isHidden = !shouldShowInnerViews
-            }
+        for subview in containerView.subviews {
+            subview.isHidden = !shouldShowInnerViews
         }
     }
 }

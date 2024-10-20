@@ -177,6 +177,8 @@ final class AppstoreDetailController: UIViewController {
     
     private func setDelegates() {
         containerScrollView.delegate = self
+        appNewUpdatesView.delegate = self
+        appRatingAndReviewsView.delegate = self
     }
     
     
@@ -229,6 +231,7 @@ final class AppstoreDetailController: UIViewController {
     }
     
     
+    // 가짜 MockData fetch
     private func fetchMockData() {
         // json 파일 경로
         guard let url = Bundle.main.url(forResource: "adp_mock", withExtension: "json") else {
@@ -253,6 +256,8 @@ final class AppstoreDetailController: UIViewController {
     }
 }
 
+
+// MARK: - extensions
 
 extension AppstoreDetailController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -282,7 +287,26 @@ extension AppstoreDetailController: UIScrollViewDelegate {
 }
 
 
-// SwiftUI preview
+extension AppstoreDetailController: AppNewUpdatesViewDelegate {
+    func newUpdatesButtonDidTap() {
+        let appstoreVersionHistoryController = AppstoreVersionHistoryController()
+        navigationController?.pushViewController(appstoreVersionHistoryController, animated: true)
+        navigationItem.backButtonTitle = "뒤로"
+    }
+}
+
+
+extension AppstoreDetailController: AppRatingAndReviewsViewDelegate {
+    func ratingAndReviewsButtonDidTap() {
+        let appstoreRatingAndReviewsController = AppstoreRatingAndReviewsController()
+        navigationController?.pushViewController(appstoreRatingAndReviewsController, animated: true)
+        navigationItem.backButtonTitle = "뒤로"
+    }
+}
+
+
+// MARK: - preview
+
 #if DEBUG
 import SwiftUI
 struct AppstoreDetailControllerRepresentable: UIViewControllerRepresentable {

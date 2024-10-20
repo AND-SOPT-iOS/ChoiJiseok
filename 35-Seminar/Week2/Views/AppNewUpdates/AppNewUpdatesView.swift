@@ -9,7 +9,13 @@ import UIKit
 import SnapKit
 import Then
 
+public protocol AppNewUpdatesViewDelegate: AnyObject {
+    func newUpdatesButtonDidTap()
+}
+
 class AppNewUpdatesView: UIView {
+    
+    weak var delegate: AppNewUpdatesViewDelegate?
     
     private let containerView = UIView()
     
@@ -47,6 +53,7 @@ class AppNewUpdatesView: UIView {
         super.init(frame: frame)
         
         makeUI()
+        bindAction()
     }
     
     required init?(coder: NSCoder) {
@@ -118,9 +125,18 @@ class AppNewUpdatesView: UIView {
                                                   lineHeightMultiple: 1.4)
     }
     
-    public func clearUI() {
+    
+    private func clearUI() {
         newAppVersionLabel.attributedText = nil
         elapsedDaysLabel.attributedText = nil
         versionChangeLogLabel.attributedText = nil
+    }
+    
+    
+    private func bindAction() {
+        newUpdatesButton.addAction(UIAction(handler: { [weak self] _ in
+            guard let self else { return }
+            delegate?.newUpdatesButtonDidTap()
+        }), for: .touchUpInside)
     }
 }

@@ -9,7 +9,14 @@ import UIKit
 import SnapKit
 import Then
 
+
+public protocol AppRatingAndReviewsViewDelegate: AnyObject {
+    func ratingAndReviewsButtonDidTap()
+}
+
 class AppRatingAndReviewsView: UIView {
+    
+    weak var delegate: AppRatingAndReviewsViewDelegate?
     
     private let containerStackView = UIStackView().then {
         $0.axis = .vertical
@@ -91,6 +98,7 @@ class AppRatingAndReviewsView: UIView {
         super.init(frame: frame)
         
         makeUI()
+        bindAction()
     }
     
     required init?(coder: NSCoder) {
@@ -227,6 +235,14 @@ class AppRatingAndReviewsView: UIView {
         }
 
         reviewContainerView.isHidden = true
+    }
+    
+    
+    private func bindAction() {
+        ratingAndReviewsButton.addAction(UIAction(handler: { [weak self] _ in
+            guard let self else { return }
+            delegate?.ratingAndReviewsButtonDidTap()
+        }), for: .touchUpInside)
     }
 }
 
