@@ -37,7 +37,7 @@ class AppTitleInfoView: UIView {
                                                     font: UIFont.systemFont(ofSize: 15, weight: .semibold)),
                               for: .normal)
         $0.clipsToBounds = true
-        $0.layer.cornerRadius = 14
+        $0.layer.cornerRadius = 16
     }
     
     private let shareIconButton = UIButton().then {
@@ -75,6 +75,7 @@ class AppTitleInfoView: UIView {
         containerView.snp.makeConstraints {
             $0.verticalEdges.equalToSuperview()
             $0.horizontalEdges.equalToSuperview().inset(20)
+            $0.height.equalTo(120)
         }
         
         appIconImageView.snp.makeConstraints {
@@ -91,8 +92,8 @@ class AppTitleInfoView: UIView {
         downloadButton.snp.makeConstraints {
             $0.left.equalTo(appIconImageView.snp.right).offset(15)
             $0.bottom.equalTo(appIconImageView.snp.bottom)
-            $0.height.equalTo(28)
-            $0.width.equalTo(68)
+            $0.height.equalTo(32)
+            $0.width.equalTo(72)
         }
         
         shareIconButton.snp.makeConstraints {
@@ -129,5 +130,15 @@ class AppTitleInfoView: UIView {
         appIconImageView.image = nil
         titleLabel.attributedText = nil
         descriptionLabel.attributedText = nil
+    }
+    
+    
+    public func showInnerSubviews(_ shouldShowInnerViews: Bool) {
+        UIView.animate(withDuration: 0.5) { [weak self] in
+            guard let self else { return }
+            for subview in containerView.subviews {
+                subview.isHidden = !shouldShowInnerViews
+            }
+        }
     }
 }

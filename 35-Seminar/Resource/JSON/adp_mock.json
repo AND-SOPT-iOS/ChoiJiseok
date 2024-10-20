@@ -11,7 +11,7 @@
       "maxRating": 5.0
     },
     "awards": {
-      "awardImageU": "person"
+      "awardImageUrl": "person"
     },
     "age": {
       "minAge": 4
