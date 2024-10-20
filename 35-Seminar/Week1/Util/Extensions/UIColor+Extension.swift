@@ -22,4 +22,12 @@ extension UIColor {
         public static let backgroundColor = UIColor(hex: 0x101111)
         public static let errorMessageColor = UIColor(hex: 0xFF8C85)
     }
+    
+    public enum Week2ColorSet {
+        public static let logoImageBorderColor = UIColor(hex: 0xE8E8E8)
+        public static let primaryBlue = UIColor.systemBlue
+        public static let buttonBackgroundLightGray = UIColor(hex: 0xF2F2F2)
+        public static let borderGray = UIColor(hex: 0xE0E0E0)
+        public static let dialogBackgroundGray = UIColor(hex: 0xF4F4F4)
+    }
 }
