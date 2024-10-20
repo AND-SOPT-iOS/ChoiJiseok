@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 import Then
 
-class AppTitleInfoView: UIView {
+final class AppTitleInfoView: UIView {
     
     private let containerView = UIView()
     
@@ -48,6 +48,7 @@ class AppTitleInfoView: UIView {
         $0.contentMode = .scaleAspectFit
     }
     
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -57,6 +58,7 @@ class AppTitleInfoView: UIView {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
     
     private func makeUI() {
         
@@ -133,6 +135,7 @@ class AppTitleInfoView: UIView {
     }
     
     
+    // 앱 타이틀 정보 뷰 내 하위 뷰 노출 여부 설정
     public func showInnerSubviews(_ shouldShowInnerViews: Bool) {
         for subview in containerView.subviews {
             subview.isHidden = !shouldShowInnerViews

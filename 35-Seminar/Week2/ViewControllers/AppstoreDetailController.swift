@@ -12,7 +12,7 @@ import Combine
 
 final class AppstoreDetailController: UIViewController {
     
-    // 모델
+    // AppDetailProduct 모델
     private var adpData = CurrentValueSubject<ADPData?, Never>(nil)
     
     private var cancellableBag = Set<AnyCancellable>()
@@ -64,6 +64,7 @@ final class AppstoreDetailController: UIViewController {
     private func makeUI() {
         view.backgroundColor = .white
         
+        // 탑 네비게이션
         setupNavigationItems()
         
         view.addSubViews(
@@ -100,6 +101,7 @@ final class AppstoreDetailController: UIViewController {
             $0.width.equalToSuperview()
         }
         
+        // 하위 뷰 하단 패딩 세팅
         containerStackView.setCustomSpacing(20, after: appTitleInfoView)
         containerStackView.setCustomSpacing(10, after: appShortInfoSwipeView)
         containerStackView.setCustomSpacing(24, after: appNewUpdatesView)
@@ -108,77 +110,6 @@ final class AppstoreDetailController: UIViewController {
         containerStackView.setCustomSpacing(28, after: appDetailInfoView)
         containerStackView.setCustomSpacing(32, after: appDeveloperView)
         containerStackView.setCustomSpacing(20, after: appSelfRatingAndReviewView)
-    }
-    
-    
-    private func bindUI() {
-        adpData.sink(receiveValue: { [weak self] data in
-            guard let self,
-                  let data else { return }
-            
-            // (1) 앱 타이틀
-            if let appTitleInfo = data.appTitleInfo {
-                appTitleInfoView.setUI(with: appTitleInfo)
-                appTitleInfoView.isHidden = false
-            } else {
-                appTitleInfoView.isHidden = true
-            }
-            
-            // (2) 앱 요약 정보
-            if let appShortInfo = data.appShortInfo {
-                appShortInfoSwipeView.setUI(with: appShortInfo)
-                appShortInfoSwipeView.isHidden = false
-            } else {
-                appShortInfoSwipeView.isHidden = true
-            }
-            
-            // (3) 앱 새로운 소식
-            if let appUpdates = data.appUpdates {
-                appNewUpdatesView.setUI(with: appUpdates )
-                appNewUpdatesView.isHidden = false
-            } else {
-                appNewUpdatesView.isHidden = true
-            }
-            
-            // (4) 프리뷰 이미지
-            if let previewImages = data.previewImages {
-                appPreviewsView.setUI(with: previewImages)
-                appPreviewsView.isHidden = false
-            } else {
-                appPreviewsView.isHidden = true
-            }
-            
-            // (5) 호환 기기
-            if let compatibleDevices = data.compatibleDevices {
-                appCompatibleDevicesView.setUI(with: compatibleDevices)
-                appCompatibleDevicesView.isHidden = false
-            } else {
-                appCompatibleDevicesView.isHidden = true
-            }
-            
-            // (6) 개발자 정보
-            if let developerInfo = data.developerInfo {
-                appDeveloperView.setUI(with: developerInfo)
-                appDeveloperView.isHidden = false
-            } else {
-                appDeveloperView.isHidden = true
-            }
-            
-            // (7) 평점 및 사용자 리뷰
-            if let ratingAndReviews = data.ratingAndReviews {
-                appRatingAndReviewsView.setUI(with: ratingAndReviews)
-                appRatingAndReviewsView.isHidden = false
-            } else {
-                appRatingAndReviewsView.isHidden = true
-            }
-        }).store(in: &cancellableBag)
-    }
-    
-    
-    private func setDelegates() {
-        containerScrollView.delegate = self
-        appNewUpdatesView.delegate = self
-        appRatingAndReviewsView.delegate = self
     }
     
     
@@ -228,6 +159,85 @@ final class AppstoreDetailController: UIViewController {
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: downloadButton)
         navigationItem.rightBarButtonItem?.isHidden = true
+    }
+    
+    
+    private func bindUI() {
+        adpData.sink(receiveValue: { [weak self] data in
+            guard let self,
+                  let data else { return }
+            
+            // (1) 앱 타이틀
+            if let appTitleInfo = data.appTitleInfo {
+                appTitleInfoView.setUI(with: appTitleInfo)
+                appTitleInfoView.isHidden = false
+            } else {
+                appTitleInfoView.isHidden = true
+            }
+            
+            // (2) 앱 요약 정보
+            if let appShortInfo = data.appShortInfo {
+                appShortInfoSwipeView.setUI(with: appShortInfo)
+                appShortInfoSwipeView.isHidden = false
+            } else {
+                appShortInfoSwipeView.isHidden = true
+            }
+            
+            // (3) 앱 새로운 소식
+            if let appUpdates = data.appUpdates {
+                appNewUpdatesView.setUI(with: appUpdates )
+                appNewUpdatesView.isHidden = false
+            } else {
+                appNewUpdatesView.isHidden = true
+            }
+            
+            // (4) 프리뷰 이미지
+            if let previewImages = data.previewImages {
+                appPreviewsView.setUI(with: previewImages)
+                appPreviewsView.isHidden = false
+            } else {
+                appPreviewsView.isHidden = true
+            }
+            
+            // (5) 호환 기기a
+            if let compatibleDevices = data.compatibleDevices {
+                appCompatibleDevicesView.setUI(with: compatibleDevices)
+                appCompatibleDevicesView.isHidden = false
+            } else {
+                appCompatibleDevicesView.isHidden = true
+            }
+            
+            // (6) 앱 디테일 정보
+            if let appDetailInfo = data.appDetailInfo {
+                appDetailInfoView.setUI(with: appDetailInfo)
+                appDetailInfoView.isHidden = false
+            } else {
+                appDetailInfoView.isHidden = true
+            }
+            
+            // (7) 개발자 정보
+            if let developerInfo = data.developerInfo {
+                appDeveloperView.setUI(with: developerInfo)
+                appDeveloperView.isHidden = false
+            } else {
+                appDeveloperView.isHidden = true
+            }
+            
+            // (8) 평점 및 사용자 리뷰
+            if let ratingAndReviews = data.ratingAndReviews {
+                appRatingAndReviewsView.setUI(with: ratingAndReviews)
+                appRatingAndReviewsView.isHidden = false
+            } else {
+                appRatingAndReviewsView.isHidden = true
+            }
+        }).store(in: &cancellableBag)
+    }
+    
+    
+    private func setDelegates() {
+        containerScrollView.delegate = self
+        appNewUpdatesView.delegate = self
+        appRatingAndReviewsView.delegate = self
     }
     
     

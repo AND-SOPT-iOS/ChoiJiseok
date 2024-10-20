@@ -14,7 +14,7 @@ public protocol AppRatingAndReviewsViewDelegate: AnyObject {
     func ratingAndReviewsButtonDidTap()
 }
 
-class AppRatingAndReviewsView: UIView {
+final class AppRatingAndReviewsView: UIView {
     
     weak var delegate: AppRatingAndReviewsViewDelegate?
     

@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 import Then
 
-class AppShortInfoSwipeView: UIView {
+final class AppShortInfoSwipeView: UIView {
     
     private let containerView = UIView()
     

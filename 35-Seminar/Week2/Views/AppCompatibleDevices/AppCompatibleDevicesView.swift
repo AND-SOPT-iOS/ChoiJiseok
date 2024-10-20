@@ -7,7 +7,7 @@
 
 import UIKit
 
-class AppCompatibleDevicesView: UIView {
+final class AppCompatibleDevicesView: UIView {
     
     private let containerView = UIView()
     

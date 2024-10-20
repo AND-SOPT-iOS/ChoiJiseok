@@ -13,7 +13,7 @@ public protocol AppNewUpdatesViewDelegate: AnyObject {
     func newUpdatesButtonDidTap()
 }
 
-class AppNewUpdatesView: UIView {
+final class AppNewUpdatesView: UIView {
     
     weak var delegate: AppNewUpdatesViewDelegate?
     

@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 import Then
 
-class AppSelfRatingAndReviewView: UIView {
+final class AppSelfRatingAndReviewView: UIView {
 
     private let containerView = UIView()
 

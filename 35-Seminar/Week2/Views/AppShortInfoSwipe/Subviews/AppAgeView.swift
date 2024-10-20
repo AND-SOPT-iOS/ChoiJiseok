@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 import Then
 
-class AppAgeView: UIView {
+final class AppAgeView: UIView {
     
     private let containerView = UIStackView().then {
         $0.distribution = .fillProportionally

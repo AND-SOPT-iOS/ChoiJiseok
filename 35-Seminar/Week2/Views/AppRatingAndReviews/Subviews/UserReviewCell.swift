@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 import Then
 
-class UserReviewCell: UIView {
+final class UserReviewCell: UIView {
     
     private let containerView = UIView().then {
         $0.backgroundColor = .white

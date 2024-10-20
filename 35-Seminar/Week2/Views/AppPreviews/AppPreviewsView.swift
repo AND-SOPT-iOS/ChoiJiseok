@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 import Then
 
-class AppPreviewsView: UIView {
+final class AppPreviewsView: UIView {
     
     private let containerView = UIView()
     

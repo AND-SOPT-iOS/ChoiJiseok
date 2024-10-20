@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 import Then
 
-class AppAwardView: UIView {
+final class AppAwardView: UIView {
     
     private let containerView = UIStackView().then {
         $0.distribution = .fillProportionally

@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 import Then
 
-class AppRatingView: UIView {
+final class AppRatingView: UIView {
     
     private let containerView = UIStackView().then {
         $0.distribution = .fillProportionally
@@ -32,6 +32,7 @@ class AppRatingView: UIView {
         $0.image = UIImage(named: "stars_container")
         $0.contentMode = .scaleAspectFill
     }
+    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
