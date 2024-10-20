@@ -202,7 +202,7 @@ final class AppSelfRatingAndReviewView: UIView {
     /// 가장 마지막에 선택한 별점만 반영되도록 구현
     private func setRatingTask(with rating: Int) {
         ratingTask = Task(priority: .userInitiated) { [weak self] in
-            try? await Task.sleep(nanoseconds: 500_000_000)  // 0.5초 대기. Task가 cancel되면 여기서 Error가 발생하여 Task 종료
+            try? await Task.sleep(nanoseconds: 500_000_000)  // 0.5초 대기. Task가 cancel되면 여기서 Error가 발생
             guard let self else { return }
             if !Task.isCancelled {
                 delegate?.didReceiveUserRating(rating: rating)
