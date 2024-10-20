@@ -26,6 +26,14 @@ extension UIStackView {
         }
         return self
     }
+    
+    @discardableResult func addArrangedSubViews(_ subviews: [UIView]) -> UIStackView {
+        subviews.forEach { [weak self] subview in
+            guard let self else { return }
+            self.addArrangedSubview(subview)
+        }
+        return self
+    }
 }
 
 
