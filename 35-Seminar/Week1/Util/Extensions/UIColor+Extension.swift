@@ -28,5 +28,6 @@ extension UIColor {
         public static let primaryBlue = UIColor.systemBlue
         public static let buttonBackgroundLightGray = UIColor(hex: 0xF2F2F2)
         public static let borderGray = UIColor(hex: 0xE0E0E0)
+        public static let dialogBackgroundGray = UIColor(hex: 0xF4F4F4)
     }
 }

@@ -238,6 +238,7 @@ final class AppstoreDetailController: UIViewController {
         containerScrollView.delegate = self
         appNewUpdatesView.delegate = self
         appRatingAndReviewsView.delegate = self
+        appSelfRatingAndReviewView.delegate = self
     }
     
     
@@ -311,6 +312,14 @@ extension AppstoreDetailController: AppRatingAndReviewsViewDelegate {
         let appstoreRatingAndReviewsController = AppstoreRatingAndReviewsController()
         navigationController?.pushViewController(appstoreRatingAndReviewsController, animated: true)
         navigationItem.backButtonTitle = "뒤로"
+    }
+}
+
+
+extension AppstoreDetailController: AppSelfRatingAndReviewViewDelegate {
+    func didReceiveUserRating(rating: Int) {
+        print("별점: \(rating)")
+        FeedBackDialog.shared.show()
     }
 }
 
