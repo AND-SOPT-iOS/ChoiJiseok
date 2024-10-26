@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 import Then
 
-final class Seminar3TestController: UIViewController {
+final class Seminar3TableViewTestController: UIViewController {
     
     let sampleApps: [App] = [
         App(
@@ -165,7 +165,7 @@ final class Seminar3TestController: UIViewController {
 }
 
 
-extension Seminar3TestController: UITableViewDelegate, UITableViewDataSource{
+extension Seminar3TableViewTestController: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return sampleApps.count
     }
@@ -316,7 +316,7 @@ final class TableViewCell: UITableViewCell {
 
 #if DEBUG
 import SwiftUI
-struct Seminar3TestControllerRepresentable: UIViewControllerRepresentable {
+struct Seminar3TableViewTestControllerRepresentable: UIViewControllerRepresentable {
     
     func updateUIViewController(_ uiViewController: UIViewControllerType, context: Context) {
         
@@ -324,12 +324,12 @@ struct Seminar3TestControllerRepresentable: UIViewControllerRepresentable {
     
     @available(iOS 13.0, *)
     func makeUIViewController(context: Context) -> some UIViewController {
-        Seminar3TestController()
+        Seminar3TableViewTestController()
     }
 }
 
 #Preview {
-    Seminar3TestControllerRepresentable()
+    Seminar3TableViewTestControllerRepresentable()
 }
 #endif
 
