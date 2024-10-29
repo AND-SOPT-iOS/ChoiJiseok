@@ -143,8 +143,6 @@ extension Seminar3CollectionViewTestController: UICollectionViewDelegate, UIColl
 
 class PhotoCell: UICollectionViewCell {
 
-    static let identifier = "PhotoCell"
-
     private lazy var photoImageView = UIImageView()
     
     private lazy var likeButton = UIButton()
