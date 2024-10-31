@@ -16,6 +16,12 @@ public protocol AppRatingAndReviewsViewDelegate: AnyObject {
 
 final class AppRatingAndReviewsView: UIView {
     
+    private enum CollectionViewConst {
+        static let itemSize = CGSize(width: UIScreen.main.bounds.size.width - 40, height: 200)
+        static let itemSpacing = 12.0
+        static var collectionViewContentInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
+    }
+    
     weak var delegate: AppRatingAndReviewsViewDelegate?
     
     private let containerStackView = UIStackView().then {
@@ -85,13 +91,32 @@ final class AppRatingAndReviewsView: UIView {
                                                   font: UIFont.systemFont(ofSize: 18, weight: .semibold))
     }
     
-    private let userReviewsContainerStackView = UIStackView().then {
-        $0.axis = .horizontal
-        $0.spacing = 12
-        $0.insetsLayoutMarginsFromSafeArea = false
-        $0.isLayoutMarginsRelativeArrangement = true
-        $0.directionalLayoutMargins = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20)
+    lazy var userReviewsCollectionView = UICollectionView(frame: .zero,
+                                                          collectionViewLayout: previewImagesCollectionViewFlowLayout).then {
+        $0.isScrollEnabled = true
+        $0.showsHorizontalScrollIndicator = false
+        $0.showsVerticalScrollIndicator = true
+        $0.backgroundColor = .clear
+        $0.clipsToBounds = false
+        $0.register(UserReviewCell.self,
+                    forCellWithReuseIdentifier: UserReviewCell.identifier)
+        $0.isPagingEnabled = false                  // 한 페이지의 넓이를 조절 할 수 없기 때문에 scrollViewWillEndDragging을 사용하여 구현
+        $0.contentInsetAdjustmentBehavior = .never  // 내부적으로 safe area에 의해 가려지는 것을 방지하기 위해서 자동으로 inset 조정해 주는 것을 비활성화
+        $0.contentInset = CollectionViewConst.collectionViewContentInset
+        $0.decelerationRate = .fast                 // 스크롤이 빠르게 되도록 설정 (페이징 애니메이션같이 보이게 하기 위함)
+        $0.translatesAutoresizingMaskIntoConstraints = false
     }
+    
+    private let previewImagesCollectionViewFlowLayout: UICollectionViewFlowLayout = {
+       let layout = UICollectionViewFlowLayout()
+       layout.scrollDirection = .horizontal
+       layout.itemSize = CollectionViewConst.itemSize
+       layout.minimumLineSpacing = CollectionViewConst.itemSpacing
+       layout.minimumInteritemSpacing = 0
+       return layout
+     }()
+    
+    private var reviews: [UserReview] = []
     
     
     override init(frame: CGRect) {
@@ -99,6 +124,7 @@ final class AppRatingAndReviewsView: UIView {
         
         makeUI()
         bindAction()
+        setCollectionView()
     }
     
     required init?(coder: NSCoder) {
@@ -125,7 +151,7 @@ final class AppRatingAndReviewsView: UIView {
                 // 사용자 리뷰 컨테이너
                 reviewContainerView.addSubViews(
                     mostHelpfulReviewTitleInfoLabel,
-                    userReviewsContainerStackView
+                    userReviewsCollectionView
                 )
             )
         )
@@ -172,10 +198,11 @@ final class AppRatingAndReviewsView: UIView {
             $0.left.equalToSuperview().inset(20)
         }
         
-        userReviewsContainerStackView.snp.makeConstraints {
-            $0.top.equalTo(mostHelpfulReviewTitleInfoLabel.snp.bottom).offset(12)
+        userReviewsCollectionView.snp.makeConstraints {
+            $0.top.equalTo(mostHelpfulReviewTitleInfoLabel.snp.bottom).offset(15)
             $0.horizontalEdges.equalToSuperview()
             $0.bottom.equalToSuperview()
+            $0.height.equalTo(200)
         }
     }
     
@@ -209,12 +236,8 @@ final class AppRatingAndReviewsView: UIView {
         // 사용자 리뷰 세팅
         guard let userReviews = data.mostHelpfulReviews, !userReviews.isEmpty else { return }
         
-        for review in userReviews {
-            let userReviewCell = UserReviewCell()
-            userReviewCell.setUI(with: review)
-            
-            userReviewsContainerStackView.addArrangedSubview(userReviewCell)
-        }
+        reviews = userReviews
+        userReviewsCollectionView.reloadData()
 
         reviewContainerView.isHidden = false
     }
@@ -230,10 +253,7 @@ final class AppRatingAndReviewsView: UIView {
             $0.width.equalToSuperview().multipliedBy(0)
         }
         
-        for subview in userReviewsContainerStackView.arrangedSubviews {
-            subview.removeFromSuperview()
-        }
-
+        reviews = []
         reviewContainerView.isHidden = true
     }
     
@@ -244,5 +264,49 @@ final class AppRatingAndReviewsView: UIView {
             delegate?.ratingAndReviewsButtonDidTap()
         }), for: .touchUpInside)
     }
+    
+    
+    private func setCollectionView() {
+        userReviewsCollectionView.dataSource = self
+        userReviewsCollectionView.delegate = self
+    }
 }
 
+
+extension AppRatingAndReviewsView: UICollectionViewDelegate, UICollectionViewDataSource {
+    
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return reviews.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: UserReviewCell.identifier,
+                                                            for: indexPath) as? UserReviewCell else {
+            return UICollectionViewCell()
+        }
+        cell.setUI(with: reviews[indexPath.row])
+        return cell
+    }
+}
+
+
+
+extension AppRatingAndReviewsView: UICollectionViewDelegateFlowLayout {
+    
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView,
+                                   withVelocity velocity: CGPoint,
+                                   targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        let layout = self.userReviewsCollectionView.collectionViewLayout as! UICollectionViewFlowLayout
+        let cellWidthIncludingSpacing = layout.itemSize.width + layout.minimumLineSpacing
+        let estimatedIndex = scrollView.contentOffset.x / cellWidthIncludingSpacing
+        var index: Int = Int(round(estimatedIndex))
+        
+        if velocity.x > 0 {
+            index = Int(ceil(estimatedIndex))
+        } else if velocity.x < 0 {
+            index = Int(floor(estimatedIndex))
+        }
+        
+        targetContentOffset.pointee = CGPoint(x: CGFloat(index) * cellWidthIncludingSpacing - scrollView.contentInset.left, y: .zero)
+    }
+}
