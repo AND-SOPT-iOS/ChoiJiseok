@@ -53,3 +53,22 @@ struct ALPData: Codable {
     let freeRankingSection: RankingSection?
 }
 
+
+
+struct PLPData: Codable {
+    let paidRankingSection: PLPRankingSection?
+    let freeRankingSection: PLPRankingSection?
+}
+
+struct PLPRankingSection: Codable, Hashable {
+    let items: [PLPRankingItem]?
+}
+
+struct PLPRankingItem: Codable, Hashable {
+    let id: Int?
+    let ranking: Int?
+    let imageUrl: String?
+    let title: String?
+    let description: String?
+    let inAppPurchaseExists: Bool?
+}

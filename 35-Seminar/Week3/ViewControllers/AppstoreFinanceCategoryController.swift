@@ -41,6 +41,7 @@ final class AppstoreFinanceCategoryController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        
         fetchMockData()
     }
     
@@ -50,7 +51,9 @@ final class AppstoreFinanceCategoryController: UIViewController {
     
     private func makeUI() {
         view.backgroundColor = .white
+        
         setupNavigationItems()
+        
         view.addSubview(collectionView)
         collectionView.snp.makeConstraints { $0.edges.equalToSuperview() }
     }
@@ -67,14 +70,14 @@ final class AppstoreFinanceCategoryController: UIViewController {
     private func bindUI() {
         alpData
             .sink(receiveValue: { [weak self] data in
-                guard let self = self, let data = data else { return }
+                guard let self, let data else { return }
                 self.applySnapshot(with: data)
             })
             .store(in: &cancellableBag)
     }
     
     private func setDelegates() {
-        // Set delegates if needed
+        
     }
     
     private func fetchMockData() {
@@ -87,7 +90,7 @@ final class AppstoreFinanceCategoryController: UIViewController {
             let data = try Data(contentsOf: url)
             let decoder = JSONDecoder()
             let decodedData = try decoder.decode(ALPData.self, from: data)
-            print(decodedData)
+            
             alpData.send(decodedData)
         } catch {
             print("Error decoding JSON: \(error)")
@@ -157,6 +160,7 @@ final class AppstoreFinanceCategoryController: UIViewController {
                                                                                     for: indexPath) as? SectionHeaderView
                 sectionHeader?.setUI(with: essentialSection.title,
                                      description: essentialSection.description)
+                sectionHeader?.delegate = self
                 return sectionHeader
             default:
                 return nil
@@ -291,6 +295,15 @@ final class AppstoreFinanceCategoryController: UIViewController {
         section.boundarySupplementaryItems = [header]
         
         return section
+    }
+}
+
+
+extension AppstoreFinanceCategoryController: SectionHeaderViewDelegate {
+    func sectionHeaderViewDidTap() {
+        let popularChartController = AppstorePopularChartController()
+        navigationController?.pushViewController(popularChartController, animated: true)
+        navigationItem.backButtonTitle = "금융"
     }
 }
 

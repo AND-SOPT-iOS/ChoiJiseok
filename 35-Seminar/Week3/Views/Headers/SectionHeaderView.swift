@@ -9,9 +9,15 @@ import UIKit
 import SnapKit
 import Then
 
+protocol SectionHeaderViewDelegate: AnyObject {
+    func sectionHeaderViewDidTap()
+}
+
 class SectionHeaderView: UICollectionReusableView {
     
     static let identifier = "EssentialSectionHeaderView"
+    
+    weak var delegate: SectionHeaderViewDelegate?
     
     private let containerView = UIView()
     
@@ -42,6 +48,7 @@ class SectionHeaderView: UICollectionReusableView {
         super.init(frame: frame)
         
         setupUI()
+        bindAction()
     }
     
     required init?(coder: NSCoder) {
@@ -103,5 +110,16 @@ class SectionHeaderView: UICollectionReusableView {
     private func clearUI() {
         titleLabel.attributedText = nil
         descriptionLabel.attributedText = nil
+    }
+    
+    
+    private func bindAction() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(sectionHeaderViewDidTap))
+        containerView.addGestureRecognizer(tapGesture)
+    }
+    
+    
+    @objc private func sectionHeaderViewDidTap() {
+        delegate?.sectionHeaderViewDidTap()
     }
 }
