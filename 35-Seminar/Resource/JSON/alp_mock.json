@@ -1,0 +1,274 @@
+{
+  "bannerSection": [
+    {
+      "additionalText": "추천",
+      "title": "AirPods 4",
+      "description": "액티브 노이즈 캔슬링 지원",
+      "fullImageUrl": "airpods_banner",
+      "appIconUrl": "airpods_thumbnail",
+      "subText": "아이콘의 귀환. 사운드의 진화.",
+      "inAppPurchaseExists": false
+    },
+    {
+      "recommendType": "새로운 경험",
+      "title": "iPhone 16",
+      "description": "사랑받기 위해 디자인되다.",
+      "fullImageUrl": "iphone16_thumbnail",
+      "appIconUrl": "iphone16_banner",
+      "subText": "알면 알수록, iPhone.",
+      "inAppPurchaseExists": true
+    },
+    {
+      "recommendType": "추천",
+      "title": "AirPods Max",
+      "description": "절대 음질.",
+      "fullImageUrl": "airpods_max_banner",
+      "appIconUrl": "airpods_max_thumbnail",
+      "subText": "두 귀를 에워싸는 궁극의 개인 청취 경험. 이제 산뜻한 새 컬러로.",
+      "inAppPurchaseExists": false
+    },
+    {
+      "recommendType": "새로운 앱",
+      "title": "Apple Watch Series 10",
+      "description": "건강한 삶을 위한 궁극의 기기.",
+      "fullImageUrl": "apple_watch_banner",
+      "appIconUrl": "apple_watch_thumbnail",
+      "subText": "움직임 하나하나, 의미 있도록.",
+      "inAppPurchaseExists": true
+    }
+  ],
+  "essentialSection": {
+    "title": "필수 금융 앱",
+    "description": "App Store 에디터가 직접 골랐습니다.",
+    "items": [
+      {
+        "imageUrl": "pass",
+        "title": "PASS",
+        "description": "당신의 돈은 어디로 가고 있을까요?",
+        "inAppPurchaseExists": true
+      },
+      {
+        "imageUrl": "mobileTmoney",
+        "title": "모바일 T 머니",
+        "description": "금융",
+        "inAppPurchaseExists": true
+      },
+      {
+        "imageUrl": "kakaopay",
+        "title": "카카오페이",
+        "description": "마음 놓고 금융하다.",
+        "inAppPurchaseExists": false
+      },
+      {
+        "imageUrl": "kbank",
+        "title": "케이뱅크",
+        "description": "금융",
+        "inAppPurchaseExists": true
+      },
+      {
+        "imageUrl": "kakaobank",
+        "title": "카카오뱅크",
+        "description": "이미 모두의 은행",
+        "inAppPurchaseExists": false
+      },
+      {
+        "imageUrl": "toss",
+        "title": "토스",
+        "description": "금융이 쉬워진다.",
+        "inAppPurchaseExists": true
+      },
+      {
+        "imageUrl": "hyundaicard",
+        "title": "현대카드",
+        "description": "금융",
+        "inAppPurchaseExists": true
+      },
+      {
+        "imageUrl": "kbpay",
+        "title": "KB페이",
+        "description": "페이의 모든 것.",
+        "inAppPurchaseExists": false
+      },
+      {
+        "imageUrl": "naverpay",
+        "title": "네이버페이",
+        "description": "지갑 없이 매장에서 결제",
+        "inAppPurchaseExists": true
+      },
+      {
+        "imageUrl": "monimo",
+        "title": "monimo (모니모, 삼성 금융네트웍스)",
+        "description": "모이는 금융 커지는 혜택!",
+        "inAppPurchaseExists": true
+      },
+      {
+        "imageUrl": "hyundaidepartment",
+        "title": "현대 아파트 통장",
+        "description": "집을 사봅시다.",
+        "inAppPurchaseExists": false
+      },
+      {
+        "imageUrl": "silson24",
+        "title": "실손24",
+        "description": "간편한 실손 보험 청구",
+        "inAppPurchaseExists": true
+      }
+    ]
+  },
+  "paidRankingSection": {
+    "title": "필수 금융 앱",
+    "description": "App Store 에디터가 직접 골랐습니다.",
+    "items": [
+      {
+        "imageUrl": "pass",
+        "title": "PASS",
+        "description": "당신의 돈은 어디로 가고 있을까요?",
+        "inAppPurchaseExists": true
+      },
+      {
+        "imageUrl": "mobileTmoney",
+        "title": "모바일 T 머니",
+        "description": "금융",
+        "inAppPurchaseExists": true
+      },
+      {
+        "imageUrl": "kakaopay",
+        "title": "카카오페이",
+        "description": "마음 놓고 금융하다.",
+        "inAppPurchaseExists": false
+      },
+      {
+        "imageUrl": "kbank",
+        "title": "케이뱅크",
+        "description": "금융",
+        "inAppPurchaseExists": true
+      },
+      {
+        "imageUrl": "kakaobank",
+        "title": "카카오뱅크",
+        "description": "이미 모두의 은행",
+        "inAppPurchaseExists": false
+      },
+      {
+        "imageUrl": "toss",
+        "title": "토스",
+        "description": "금융이 쉬워진다.",
+        "inAppPurchaseExists": true
+      },
+      {
+        "imageUrl": "hyundaicard",
+        "title": "현대카드",
+        "description": "금융",
+        "inAppPurchaseExists": true
+      },
+      {
+        "imageUrl": "kbpay",
+        "title": "KB페이",
+        "description": "페이의 모든 것.",
+        "inAppPurchaseExists": false
+      },
+      {
+        "imageUrl": "naverpay",
+        "title": "네이버페이",
+        "description": "지갑 없이 매장에서 결제",
+        "inAppPurchaseExists": true
+      },
+      {
+        "imageUrl": "monimo",
+        "title": "monimo (모니모, 삼성 금융네트웍스)",
+        "description": "모이는 금융 커지는 혜택!",
+        "inAppPurchaseExists": true
+      },
+      {
+        "imageUrl": "hyundaidepartment",
+        "title": "현대 아파트 통장",
+        "description": "집을 사봅시다.",
+        "inAppPurchaseExists": false
+      },
+      {
+        "imageUrl": "silson24",
+        "title": "실손24",
+        "description": "간편한 실손 보험 청구",
+        "inAppPurchaseExists": true
+      }
+    ]
+  },
+  "freeRankingSection": {
+    "title": "필수 금융 앱",
+    "description": "App Store 에디터가 직접 골랐습니다.",
+    "items": [
+      {
+        "imageUrl": "pass",
+        "title": "PASS",
+        "description": "당신의 돈은 어디로 가고 있을까요?",
+        "inAppPurchaseExists": true
+      },
+      {
+        "imageUrl": "mobileTmoney",
+        "title": "모바일 T 머니",
+        "description": "금융",
+        "inAppPurchaseExists": true
+      },
+      {
+        "imageUrl": "kakaopay",
+        "title": "카카오페이",
+        "description": "마음 놓고 금융하다.",
+        "inAppPurchaseExists": false
+      },
+      {
+        "imageUrl": "kbank",
+        "title": "케이뱅크",
+        "description": "금융",
+        "inAppPurchaseExists": true
+      },
+      {
+        "imageUrl": "kakaobank",
+        "title": "카카오뱅크",
+        "description": "이미 모두의 은행",
+        "inAppPurchaseExists": false
+      },
+      {
+        "imageUrl": "toss",
+        "title": "토스",
+        "description": "금융이 쉬워진다.",
+        "inAppPurchaseExists": true
+      },
+      {
+        "imageUrl": "hyundaicard",
+        "title": "현대카드",
+        "description": "금융",
+        "inAppPurchaseExists": true
+      },
+      {
+        "imageUrl": "kbpay",
+        "title": "KB페이",
+        "description": "페이의 모든 것.",
+        "inAppPurchaseExists": false
+      },
+      {
+        "imageUrl": "naverpay",
+        "title": "네이버페이",
+        "description": "지갑 없이 매장에서 결제",
+        "inAppPurchaseExists": true
+      },
+      {
+        "imageUrl": "monimo",
+        "title": "monimo (모니모, 삼성 금융네트웍스)",
+        "description": "모이는 금융 커지는 혜택!",
+        "inAppPurchaseExists": true
+      },
+      {
+        "imageUrl": "hyundaidepartment",
+        "title": "현대 아파트 통장",
+        "description": "집을 사봅시다.",
+        "inAppPurchaseExists": false
+      },
+      {
+        "imageUrl": "silson24",
+        "title": "실손24",
+        "description": "간편한 실손 보험 청구",
+        "inAppPurchaseExists": true
+      }
+    ]
+  }
+}
