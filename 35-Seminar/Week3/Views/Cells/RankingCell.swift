@@ -9,7 +9,13 @@ import UIKit
 import SnapKit
 import Then
 
+protocol RankingCellDelegate: AnyObject {
+    func rankingCellDidTap(itemID: Int)
+}
+
 final class RankingCell: UICollectionViewCell {
+    
+    weak var delegate: RankingCellDelegate?
     
     private let containerView = UIView()
     
@@ -58,11 +64,13 @@ final class RankingCell: UICollectionViewCell {
         $0.backgroundColor = UIColor.Week3ColorSet.borderGray
     }
     
+    private var rankingItemID: Int?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
         makeUI()
+        bindAction()
     }
     
     required init?(coder: NSCoder) {
@@ -128,6 +136,10 @@ final class RankingCell: UICollectionViewCell {
     }
     
     
+    public func setCellID(_ cellID: Int?) {
+        rankingItemID = cellID
+    }
+    
     public func setUI(with item: RankingItem) {
         
         clearUI()
@@ -175,6 +187,18 @@ final class RankingCell: UICollectionViewCell {
     
     public func showBottomLine(_ shouldShowBottomLine: Bool) {
         bottomLineView.isHidden = !shouldShowBottomLine
+    }
+    
+    
+    private func bindAction() {
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(rankingCellDidTap))
+        containerView.addGestureRecognizer(tapGesture)
+    }
+    
+    
+    @objc private func rankingCellDidTap() {
+        guard let rankingItemID else { return }
+        delegate?.rankingCellDidTap(itemID: rankingItemID)
     }
 }
 

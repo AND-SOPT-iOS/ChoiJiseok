@@ -115,13 +115,23 @@ final class AppstoreFinanceCategoryController: UIViewController {
                     cell.showBottomLine((indexPath.row + 1) % 3 != 0)
                 }
                 return cell
-            case .freeRanking, .paidRanking:
+            case .paidRanking:
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RankingCell.identifier, for: indexPath) as! RankingCell
                 if let essentialItem = item as? RankingItem {
                     cell.setUI(with: essentialItem)
                     cell.showBottomLine((indexPath.row + 1) % 3 != 0)
                 }
                 return cell
+            case .freeRanking:
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RankingCell.identifier, for: indexPath) as! RankingCell
+                if let freeRankingItem = item as? RankingItem {
+                    cell.setCellID(freeRankingItem.id)
+                    cell.setUI(with: freeRankingItem)
+                    cell.showBottomLine((indexPath.row + 1) % 3 != 0)
+                    cell.delegate = self
+                }
+                return cell
+
             }
         }
         
@@ -307,6 +317,19 @@ extension AppstoreFinanceCategoryController: SectionHeaderViewDelegate {
     }
 }
 
+
+extension AppstoreFinanceCategoryController: RankingCellDelegate {
+    func rankingCellDidTap(itemID: Int) {
+        // 토스인 경우 디테일 페이지로 이동
+        /// ㄴ 실제로는 제휴점 id를 뷰모델에서 들고 있다가, AppstoreDetailController로 이동할 때 전달
+        ///   AppstoreDetailController 진입 시, 해당 id 값으로 PDP api 호출하여 데이터를 받아온 다음 UI에 세팅
+        if itemID == 410 {
+            let appstoreDetailController = AppstoreDetailController()
+            navigationController?.pushViewController(appstoreDetailController, animated: true)
+            navigationItem.backButtonTitle = "금융"
+        }
+    }
+}
 
 
 // MARK: - preview
