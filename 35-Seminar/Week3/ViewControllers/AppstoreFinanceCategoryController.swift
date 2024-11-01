@@ -209,14 +209,14 @@ final class AppstoreFinanceCategoryController: UIViewController {
     func createRecommendSectionLayout() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .absolute(270)
+            heightDimension: .estimated(276)
         )
 
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .absolute(UIScreen.main.bounds.width - 30),
-            heightDimension: .absolute(270)
+            heightDimension: .estimated(276)
         )
 
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
@@ -224,7 +224,7 @@ final class AppstoreFinanceCategoryController: UIViewController {
         
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .groupPagingCentered
-        section.contentInsets = .init(top: 0, leading: 0, bottom: 40, trailing: 0)
+        section.contentInsets = .init(top: 10, leading: 0, bottom: 40, trailing: 0)
 
         return section
     }

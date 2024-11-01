@@ -17,7 +17,7 @@ final class RecommendCell: UICollectionViewCell {
     // MARK: 헤더
     private let appInfoHeaderView = UIStackView().then {
         $0.axis = .vertical
-        $0.spacing = 2
+        $0.spacing = 4
         $0.alignment = .leading
     }
     
@@ -64,7 +64,7 @@ final class RecommendCell: UICollectionViewCell {
     }
     
     private let downloadButton = UIButton().then {
-        $0.backgroundColor = .lightGray
+        $0.backgroundColor = .lightGray.withAlphaComponent(0.7)
         $0.setAttributedTitle(.makeAttributedString(text: "받기",
                                                     color: .white,
                                                     font: UIFont.systemFont(ofSize: 15, weight: .semibold)),
@@ -132,7 +132,7 @@ final class RecommendCell: UICollectionViewCell {
         
         appInfoHeaderView.snp.makeConstraints {
             $0.top.left.right.equalToSuperview()
-            $0.height.equalTo(64)
+            $0.height.equalTo(70)
         }
         
         appInfoContentsView.snp.makeConstraints {
@@ -158,7 +158,7 @@ final class RecommendCell: UICollectionViewCell {
         
         downloadButton.snp.makeConstraints {
             $0.centerY.equalToSuperview()
-            $0.right.equalToSuperview().offset(-10)
+            $0.right.equalToSuperview().offset(-14)
             $0.height.equalTo(32)
             $0.width.equalTo(72)
         }
@@ -190,13 +190,13 @@ final class RecommendCell: UICollectionViewCell {
         if let title = data.title {
             headerTitleLabel.attributedText = .makeAttributedString(text: title,
                                                                     color: .black,
-                                                                    font: UIFont.systemFont(ofSize: 20, weight: .medium),
+                                                                    font: UIFont.systemFont(ofSize: 22, weight: .medium),
                                                                     lineBreakMode: .byTruncatingTail)
         }
 
         if let description = data.description {
             headerDescriptionLabel.attributedText = .makeAttributedString(text: description,
-                                                                          color: .darkGray,
+                                                                          color: .gray,
                                                                           font: UIFont.systemFont(ofSize: 20, weight: .medium),
                                                                           lineBreakMode: .byTruncatingTail)
         }
@@ -218,7 +218,7 @@ final class RecommendCell: UICollectionViewCell {
         
         if let subText = data.subText {
             appSubTextLabel.attributedText = .makeAttributedString(text: subText,
-                                                                   color: .gray,
+                                                                   color: .lightGray,
                                                                    font: UIFont.systemFont(ofSize: 12, weight: .regular),
                                                                    lineBreakMode: .byTruncatingTail)
         }
