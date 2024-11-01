@@ -136,11 +136,8 @@ final class RecommendCell: UICollectionViewCell {
         }
         
         appInfoContentsView.snp.makeConstraints {
-            $0.top.equalTo(appInfoHeaderView.snp.bottom).offset(5)
+            $0.top.equalTo(appInfoHeaderView.snp.bottom).offset(6)
             $0.left.right.bottom.equalToSuperview()
-        }
-        
-        appInfoContentsView.snp.makeConstraints {
             $0.height.equalTo(200)
         }
         
@@ -221,7 +218,7 @@ final class RecommendCell: UICollectionViewCell {
         
         if let subText = data.subText {
             appSubTextLabel.attributedText = .makeAttributedString(text: subText,
-                                                                   color: .lightGray,
+                                                                   color: .gray,
                                                                    font: UIFont.systemFont(ofSize: 12, weight: .regular),
                                                                    lineBreakMode: .byTruncatingTail)
         }

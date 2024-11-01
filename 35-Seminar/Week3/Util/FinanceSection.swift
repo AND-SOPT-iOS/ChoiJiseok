@@ -8,6 +8,6 @@
 enum FinanceSection: Int, CaseIterable {
     case recommend
     case essential
-//    case paidRanking
-//    case freeRanking
+    case paidRanking
+    case freeRanking
 }

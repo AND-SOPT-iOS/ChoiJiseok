@@ -1,21 +1,27 @@
 //
-//  EssentialCell.swift
+//  PaidRankingCell.swift
 //  35-Seminar
 //
-//  Created by 최지석 on 11/1/24.
+//  Created by 최지석 on 11/2/24.
 //
 
 import UIKit
 import SnapKit
 import Then
 
-final class EssentialCell: UICollectionViewCell {
+final class RankingCell: UICollectionViewCell {
     
     private let containerView = UIView()
     
     private let appIconImageView = UIImageView().then {
         $0.clipsToBounds = true
-        $0.layer.cornerRadius = 10
+        $0.layer.cornerRadius = 15
+        $0.layer.borderWidth = 1
+        $0.layer.borderColor = UIColor.Week3ColorSet.logoImageBorderColor.cgColor
+    }
+    
+    private let rankingLabel = UILabel().then {
+        $0.numberOfLines = 1
     }
     
     private let appTitleStackView = UIStackView().then {
@@ -27,7 +33,6 @@ final class EssentialCell: UICollectionViewCell {
     private let appTitleLabel = UILabel().then {
         $0.numberOfLines = 2
     }
-    
     
     private let appDescriptionLabel = UILabel().then {
         $0.numberOfLines = 1
@@ -53,6 +58,7 @@ final class EssentialCell: UICollectionViewCell {
         $0.backgroundColor = UIColor.Week3ColorSet.borderGray
     }
     
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -63,10 +69,12 @@ final class EssentialCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    
     private func makeUI() {
         addSubview(
             containerView.addSubViews(
                 appIconImageView,
+                rankingLabel,
                 appTitleStackView.addArrangedSubViews(
                     appTitleLabel,
                     appDescriptionLabel
@@ -88,6 +96,11 @@ final class EssentialCell: UICollectionViewCell {
             $0.size.equalTo(60)
         }
         
+        rankingLabel.snp.makeConstraints {
+            $0.top.equalTo(appTitleStackView.snp.top)
+            $0.left.equalTo(appIconImageView.snp.right).offset(10)
+        }
+        
         downloadButton.snp.makeConstraints {
             $0.centerY.equalToSuperview()
             $0.right.equalToSuperview()
@@ -101,7 +114,7 @@ final class EssentialCell: UICollectionViewCell {
         }
         
         appTitleStackView.snp.makeConstraints {
-            $0.left.equalTo(appIconImageView.snp.right).offset(10)
+            $0.left.equalTo(rankingLabel.snp.right).offset(15)
             $0.centerY.equalToSuperview()
             $0.right.equalTo(downloadButton.snp.left).offset(-14)
         }
@@ -114,27 +127,33 @@ final class EssentialCell: UICollectionViewCell {
         }
     }
     
-    func setUI(with item: EssentialItem) {
+    
+    public func setUI(with item: RankingItem) {
+        
         clearUI()
         
+        if let imageUrl = item.imageUrl {
+            appIconImageView.image = UIImage(named: imageUrl)
+        }
+        
+        if let ranking = item.ranking {
+            rankingLabel.attributedText = .makeAttributedString(text: "\(ranking)",
+                                                                color: .black,
+                                                                font: UIFont.systemFont(ofSize: 16, weight: .bold))
+        }
+            
         if let title = item.title {
-            appTitleLabel.attributedText = .makeAttributedString(
-                text: title,
-                color: .black,
-                font: UIFont.systemFont(ofSize: 16, weight: .medium),
-                lineBreakMode: .byTruncatingTail
-            )
+            appTitleLabel.attributedText = .makeAttributedString(text: title,
+                                                                 color: .black,
+                                                                 font: UIFont.systemFont(ofSize: 16, weight: .medium),
+                                                                 lineBreakMode: .byTruncatingTail)
         }
 
         if let description = item.description {
             appDescriptionLabel.attributedText = .makeAttributedString(text: description,
-                                                                       color: .darkGray,
+                                                                       color: .gray,
                                                                        font: UIFont.systemFont(ofSize: 12, weight: .regular),
                                                                        lineBreakMode: .byTruncatingTail)
-        }
-
-        if let imageUrl = item.imageUrl {
-            appIconImageView.image = UIImage(named: imageUrl)
         }
 
         if let inAppPurchaseExists = item.inAppPurchaseExists, inAppPurchaseExists {
@@ -144,11 +163,19 @@ final class EssentialCell: UICollectionViewCell {
         }
     }
 
+    
     private func clearUI() {
         appTitleLabel.attributedText = nil
         appDescriptionLabel.attributedText = nil
+        rankingLabel.attributedText = nil
         appIconImageView.image = nil
         inAppPurchasesLabel.isHidden = true
     }
+    
+    
+    public func showBottomLine(_ shouldShowBottomLine: Bool) {
+        bottomLineView.isHidden = !shouldShowBottomLine
+    }
 }
+
 

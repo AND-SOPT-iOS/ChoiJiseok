@@ -17,8 +17,15 @@ final class AppstoreFinanceCategoryController: UIViewController {
     
     private lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: createCompositionalLayout()).then {
         $0.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        $0.register(RecommendCell.self, forCellWithReuseIdentifier: RecommendCell.identifier)
-        $0.register(EssentialCell.self, forCellWithReuseIdentifier: EssentialCell.identifier)
+        $0.register(RecommendCell.self, 
+                    forCellWithReuseIdentifier: RecommendCell.identifier)
+        $0.register(EssentialCell.self, 
+                    forCellWithReuseIdentifier: EssentialCell.identifier)
+        $0.register(RankingCell.self,
+                    forCellWithReuseIdentifier: RankingCell.identifier)
+        $0.register(SectionHeaderView.self,
+                    forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                    withReuseIdentifier: SectionHeaderView.identifier)
     }
     
     private var dataSource: UICollectionViewDiffableDataSource<FinanceSection, AnyHashable>!
@@ -102,8 +109,57 @@ final class AppstoreFinanceCategoryController: UIViewController {
                 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EssentialCell.identifier, for: indexPath) as! EssentialCell
                 if let essentialItem = item as? EssentialItem {
                     cell.setUI(with: essentialItem)
+                    cell.showBottomLine((indexPath.row + 1) % 3 != 0)
                 }
                 return cell
+            case .freeRanking, .paidRanking:
+                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RankingCell.identifier, for: indexPath) as! RankingCell
+                if let essentialItem = item as? RankingItem {
+                    cell.setUI(with: essentialItem)
+                    cell.showBottomLine((indexPath.row + 1) % 3 != 0)
+                }
+                return cell
+            }
+        }
+        
+        // 헤더 등록
+        dataSource.supplementaryViewProvider = { (
+            collectionView: UICollectionView, kind: String, indexPath: IndexPath
+        ) -> UICollectionReusableView? in
+            guard kind == UICollectionView.elementKindSectionHeader else {
+                return UICollectionReusableView()
+            }
+
+            let section = self.dataSource.snapshot().sectionIdentifiers[indexPath.section]
+            guard section != .recommend else { return nil }
+
+            switch section {
+            case .essential:
+                guard let essentialSection = self.alpData.value?.essentialSection else { return nil }
+                let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind,
+                                                                                    withReuseIdentifier: SectionHeaderView.identifier,
+                                                                                    for: indexPath) as? SectionHeaderView
+                sectionHeader?.setUI(with: essentialSection.title,
+                                     description: essentialSection.description)
+                return sectionHeader
+            case .paidRanking:
+                guard let essentialSection = self.alpData.value?.paidRankingSection else { return nil }
+                let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind,
+                                                                                    withReuseIdentifier: SectionHeaderView.identifier,
+                                                                                    for: indexPath) as? SectionHeaderView
+                sectionHeader?.setUI(with: essentialSection.title,
+                                     description: essentialSection.description)
+                return sectionHeader
+            case .freeRanking:
+                guard let essentialSection = self.alpData.value?.freeRankingSection else { return nil }
+                let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind,
+                                                                                    withReuseIdentifier: SectionHeaderView.identifier,
+                                                                                    for: indexPath) as? SectionHeaderView
+                sectionHeader?.setUI(with: essentialSection.title,
+                                     description: essentialSection.description)
+                return sectionHeader
+            default:
+                return nil
             }
         }
     }
@@ -121,8 +177,19 @@ final class AppstoreFinanceCategoryController: UIViewController {
             snapshot.appendItems(essentialItems, toSection: .essential)
         }
         
+        snapshot.appendSections([.paidRanking])
+        if let paidRankingItems = data.paidRankingSection?.items {
+            snapshot.appendItems(paidRankingItems, toSection: .paidRanking)
+        }
+        
+        snapshot.appendSections([.freeRanking])
+        if let freeRankingItems = data.freeRankingSection?.items {
+            snapshot.appendItems(freeRankingItems, toSection: .freeRanking)
+        }
+        
         dataSource.apply(snapshot, animatingDifferences: true)
     }
+    
     
     func createCompositionalLayout() -> UICollectionViewCompositionalLayout {
         return UICollectionViewCompositionalLayout { sectionIndex, layoutEnvironment in
@@ -132,6 +199,8 @@ final class AppstoreFinanceCategoryController: UIViewController {
                 return self.createRecommendSectionLayout()
             case .essential:
                 return self.createEssentialSectionLayout()
+            case .paidRanking, .freeRanking:
+                return self.createRankingSectionLayout()
             }
         }
     }
@@ -140,14 +209,14 @@ final class AppstoreFinanceCategoryController: UIViewController {
     func createRecommendSectionLayout() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .estimated(300)
+            heightDimension: .absolute(270)
         )
 
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
 
         let groupSize = NSCollectionLayoutSize(
             widthDimension: .absolute(UIScreen.main.bounds.width - 30),
-            heightDimension: .estimated(300)
+            heightDimension: .absolute(270)
         )
 
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
@@ -155,31 +224,72 @@ final class AppstoreFinanceCategoryController: UIViewController {
         
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .groupPagingCentered
+        section.contentInsets = .init(top: 0, leading: 0, bottom: 40, trailing: 0)
 
         return section
     }
-    
+
     
     func createEssentialSectionLayout() -> NSCollectionLayoutSection {
         let itemSize = NSCollectionLayoutSize(
             widthDimension: .fractionalWidth(1.0),
-            heightDimension: .estimated(70)
+            heightDimension: .estimated(72)
         )
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
         let groupSize = NSCollectionLayoutSize(
-            widthDimension: .absolute(UIScreen.main.bounds.width - 40), // 전체 너비에서 좌우 여백을 고려한 너비
-            heightDimension: .estimated(210)
+            widthDimension: .absolute(UIScreen.main.bounds.width - 40),
+            heightDimension: .estimated(240)
         )
         let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize,
                                                      subitems: Array(repeating: item, count: 3))
-        group.contentInsets = .init(top: 0, leading: 0, bottom: 0, trailing: 0) // 그룹 내부에 따로 여백을 주지 않음
+        group.contentInsets = .init(top: 0, leading: 0, bottom: 0, trailing: 0)
         
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .groupPaging
-        section.contentInsets = .init(top: 0, leading: 20, bottom: 0, trailing: 20) // 양쪽 끝 여백 설정
-        section.interGroupSpacing = 10 // 그룹 간 10px 간격 설정
-
+        section.contentInsets = .init(top: 5, leading: 20, bottom: 40, trailing: 20)
+        section.interGroupSpacing = 10
+        
+        // Essential 섹션 헤더 추가
+        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                heightDimension: .absolute(44))
+        let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
+                                                                 elementKind: UICollectionView.elementKindSectionHeader,
+                                                                 alignment: .top)
+        section.boundarySupplementaryItems = [header]
+        
+        return section
+    }
+    
+    
+    func createRankingSectionLayout() -> NSCollectionLayoutSection {
+        let itemSize = NSCollectionLayoutSize(
+            widthDimension: .fractionalWidth(1.0),
+            heightDimension: .estimated(72)
+        )
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        let groupSize = NSCollectionLayoutSize(
+            widthDimension: .absolute(UIScreen.main.bounds.width - 40),
+            heightDimension: .estimated(240)
+        )
+        let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize,
+                                                     subitems: Array(repeating: item, count: 3))
+        group.contentInsets = .init(top: 0, leading: 0, bottom: 0, trailing: 0)
+        
+        let section = NSCollectionLayoutSection(group: group)
+        section.orthogonalScrollingBehavior = .groupPaging
+        section.contentInsets = .init(top: 5, leading: 20, bottom: 40, trailing: 20)
+        section.interGroupSpacing = 10
+        
+        // Ranking 섹션 헤더 추가
+        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0),
+                                                heightDimension: .estimated(28))
+        let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize,
+                                                                 elementKind: UICollectionView.elementKindSectionHeader,
+                                                                 alignment: .top)
+        section.boundarySupplementaryItems = [header]
+        
         return section
     }
 }

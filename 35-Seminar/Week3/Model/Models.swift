@@ -6,6 +6,7 @@
 //
 
 struct BannerSection: Codable, Hashable {
+    let id: Int?
     let additionalText: String?
     let recommendType: String?
     let title: String?
@@ -16,31 +17,33 @@ struct BannerSection: Codable, Hashable {
     let inAppPurchaseExists: Bool?
 }
 
-struct EssentialSection: Codable {
+struct EssentialSection: Codable, Hashable {
     let title: String?
     let description: String?
     let items: [EssentialItem]?
 }
 
 struct EssentialItem: Codable, Hashable {
+    let id: Int?
     let imageUrl: String?
     let title: String?
     let description: String?
     let inAppPurchaseExists: Bool?
 }
 
-struct RankingSection: Codable {
+struct RankingSection: Codable, Hashable {
     let title: String?
     let description: String?
     let items: [RankingItem]?
 }
 
-struct RankingItem: Codable {
+struct RankingItem: Codable, Hashable {
+    let id: Int?
+    let ranking: Int?
     let imageUrl: String?
     let title: String?
     let description: String?
     let inAppPurchaseExists: Bool?
-    let ranking: Int?
 }
 
 struct ALPData: Codable {
