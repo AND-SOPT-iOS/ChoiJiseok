@@ -22,7 +22,7 @@ struct EssentialSection: Codable {
     let items: [EssentialItem]?
 }
 
-struct EssentialItem: Codable {
+struct EssentialItem: Codable, Hashable {
     let imageUrl: String?
     let title: String?
     let description: String?
