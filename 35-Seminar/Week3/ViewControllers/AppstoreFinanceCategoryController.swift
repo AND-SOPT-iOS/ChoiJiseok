@@ -13,6 +13,7 @@ import Combine
 final class AppstoreFinanceCategoryController: UIViewController {
 
     private var alpData = CurrentValueSubject<ALPData?, Never>(nil)
+    
     private var cancellableBag = Set<AnyCancellable>()
     
     private lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: createCompositionalLayout()).then {
@@ -99,31 +100,51 @@ final class AppstoreFinanceCategoryController: UIViewController {
 
     
     private func configureDataSource() {
+        // dataSource 설정
         dataSource = UICollectionViewDiffableDataSource<FinanceSection, AnyHashable>(collectionView: collectionView) { collectionView, indexPath, item in
-            let sectionType = FinanceSection(rawValue: indexPath.section)!
+            
+            guard let sectionType = FinanceSection(rawValue: indexPath.section) else {
+                return UICollectionViewCell()
+            }
+            
             switch sectionType {
+            // MARK: 추천 배너
             case .recommend:
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecommendCell.identifier, for: indexPath) as! RecommendCell
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecommendCell.identifier,
+                                                                    for: indexPath) as? RecommendCell else {
+                    return UICollectionViewCell()
+                }
                 if let bannerSection = item as? BannerSection {
                     cell.setUI(with: bannerSection)
                 }
                 return cell
+            // MARK: 필수 앱
             case .essential:
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EssentialCell.identifier, for: indexPath) as! EssentialCell
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: EssentialCell.identifier,
+                                                                    for: indexPath) as? EssentialCell else {
+                    return UICollectionViewCell()
+                }
                 if let essentialItem = item as? EssentialItem {
                     cell.setUI(with: essentialItem)
                     cell.showBottomLine((indexPath.row + 1) % 3 != 0)
                 }
                 return cell
+            // MARK: 유료 순위
             case .paidRanking:
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RankingCell.identifier, for: indexPath) as! RankingCell
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RankingCell.identifier,
+                                                              for: indexPath) as? RankingCell else {
+                    return UICollectionViewCell()
+                }
                 if let essentialItem = item as? RankingItem {
                     cell.setUI(with: essentialItem)
                     cell.showBottomLine((indexPath.row + 1) % 3 != 0)
                 }
                 return cell
+            // MARK: 무료 순위
             case .freeRanking:
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RankingCell.identifier, for: indexPath) as! RankingCell
+                guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RankingCell.identifier, for: indexPath) as? RankingCell else {
+                    return UICollectionViewCell()
+                }
                 if let freeRankingItem = item as? RankingItem {
                     cell.setCellID(freeRankingItem.id)
                     cell.setUI(with: freeRankingItem)
@@ -147,6 +168,7 @@ final class AppstoreFinanceCategoryController: UIViewController {
             guard section != .recommend else { return nil }
 
             switch section {
+            // MARK: 필수 앱 헤더
             case .essential:
                 guard let essentialSection = self.alpData.value?.essentialSection else { return nil }
                 let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind,
@@ -155,6 +177,7 @@ final class AppstoreFinanceCategoryController: UIViewController {
                 sectionHeader?.setUI(with: essentialSection.title,
                                      description: essentialSection.description)
                 return sectionHeader
+            // MARK: 유료 순위 헤더
             case .paidRanking:
                 guard let essentialSection = self.alpData.value?.paidRankingSection else { return nil }
                 let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind,
@@ -163,6 +186,7 @@ final class AppstoreFinanceCategoryController: UIViewController {
                 sectionHeader?.setUI(with: essentialSection.title,
                                      description: essentialSection.description)
                 return sectionHeader
+            // MARK: 무료 순위 헤더
             case .freeRanking:
                 guard let essentialSection = self.alpData.value?.freeRankingSection else { return nil }
                 let sectionHeader = collectionView.dequeueReusableSupplementaryView(ofKind: kind,
@@ -178,6 +202,7 @@ final class AppstoreFinanceCategoryController: UIViewController {
         }
     }
 
+    
     private func applySnapshot(with data: ALPData) {
         var snapshot = NSDiffableDataSourceSnapshot<FinanceSection, AnyHashable>()
         
