@@ -5,7 +5,7 @@
 //  Created by 최지석 on 11/1/24.
 //
 
-struct BannerSection: Codable {
+struct BannerSection: Codable, Hashable {
     let additionalText: String?
     let recommendType: String?
     let title: String?
