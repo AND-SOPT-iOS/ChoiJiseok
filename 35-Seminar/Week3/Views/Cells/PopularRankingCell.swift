@@ -11,8 +11,6 @@ import Then
 
 final class PopularRankingCell: UITableViewCell {
     
-    static let identifier = "PopularRankingCell"
-    
     private let containerView = UIView()
     
     private let appIconImageView = UIImageView().then {
