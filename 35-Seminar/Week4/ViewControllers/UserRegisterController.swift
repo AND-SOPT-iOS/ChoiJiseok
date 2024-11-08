@@ -167,7 +167,7 @@ final class UserRegisterController: UIViewController {
             return
         }
         
-        UserService.shard.register(username: username,
+        UserService.shared.register(username: username,
                                    password: password,
                                    hobby: hobby) { [weak self] result in
             DispatchQueue.main.async {

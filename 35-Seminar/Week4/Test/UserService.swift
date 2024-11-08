@@ -8,11 +8,9 @@
 import Alamofire
 import Foundation
 
-/// 클래스는 라우터 별로 나눠줄 수 있음!
-/// 라우터란 URL의 분기점. 이 클래스의 분기점은 /user 임
 public class UserService {
     
-    static let shard = UserService()
+    static let shared = UserService()
     
     private init() { }
 
@@ -77,7 +75,145 @@ public class UserService {
     }
     }
 
-    /// 서버의 명세서 기반으로 에러 처리를 진행해줌
+    // 1. 내 취미 조회
+    func getMyHobby(token: String, completion: @escaping (Result<String, NetworkError>) -> Void) {
+        let url = Environment.baseURL + "/user/my-hobby"
+        
+        let headers: HTTPHeaders = [
+            "token": token
+        ]
+        
+        AF.request(url, method: .get, headers: headers)
+            .validate()
+            .response { [weak self] response in
+                guard let statusCode = response.response?.statusCode,
+                      let data = response.data,
+                      let self else {
+                    completion(.failure(.unknownError))
+                    return
+                }
+                
+                switch response.result {
+                case .success:
+                    do {
+                        let hobby = try JSONDecoder().decode(HobbyResponse.self, from: data).result.hobby
+                        completion(.success(hobby))
+                    } catch {
+                        completion(.failure(.decodingError))
+                    }
+                case .failure:
+                    let networkError = self.handleStatusCode(statusCode, data: data)
+                    completion(.failure(networkError))
+                }
+            }
+    }
+
+    // 2. 다른 사람 취미 조회
+    func getOtherUserHobby(userId: String, token: String, completion: @escaping (Result<String, NetworkError>) -> Void) {
+        let url = Environment.baseURL + "/user/\(userId)/hobby"
+        
+        let headers: HTTPHeaders = [
+            "token": token
+        ]
+        
+        AF.request(url, method: .get, headers: headers)
+            .validate()
+            .response { [weak self] response in
+                guard let statusCode = response.response?.statusCode,
+                      let data = response.data,
+                      let self else {
+                    completion(.failure(.unknownError))
+                    return
+                }
+                
+                switch response.result {
+                case .success:
+                    do {
+                        let hobby = try JSONDecoder().decode(HobbyResponse.self, from: data).result.hobby
+                        completion(.success(hobby))
+                    } catch {
+                        completion(.failure(.decodingError))
+                    }
+                case .failure:
+                    let networkError = self.handleStatusCode(statusCode, data: data)
+                    completion(.failure(networkError))
+                }
+            }
+    }
+
+    // 3. 유저 정보 변경
+    func updateUserInfo(token: String, hobby: String, password: String, completion: @escaping (Result<Bool, NetworkError>) -> Void) {
+        let url = Environment.baseURL + "/user"
+        
+        let headers: HTTPHeaders = [
+            "token": token
+        ]
+        
+        let parameters = UpdateUserRequest(hobby: hobby, password: password)
+        
+        AF.request(url, method: .put, parameters: parameters, encoder: JSONParameterEncoder.default, headers: headers)
+            .validate()
+            .response { [weak self] response in
+                guard let statusCode = response.response?.statusCode,
+                      let data = response.data,
+                      let self else {
+                    completion(.failure(.unknownError))
+                    return
+                }
+                
+                switch response.result {
+                case .success:
+                    completion(.success(true))
+                case .failure(let error):
+                    let networkError = self.handleStatusCode(statusCode, data: data)
+                    completion(.failure(networkError))
+                }
+            }
+    }
+
+    // 4. 로그인
+    func login(username: String, password: String, completion: @escaping (Result<String, NetworkError>) -> Void) {
+        let url = Environment.baseURL + "/login"
+        
+        let parameters = LoginRequest(username: username, password: password)
+        
+        AF.request(url, method: .post, parameters: parameters, encoder: JSONParameterEncoder.default)
+            .validate()
+            .response { [weak self] response in
+                guard let statusCode = response.response?.statusCode,
+                      let data = response.data,
+                      let self else {
+                    print("Error: Missing status code or data")
+                    completion(.failure(.unknownError))
+                    return
+                }
+                
+                switch response.result {
+                case .success:
+                    do {
+                        let decodedResponse = try JSONDecoder().decode(LoginResponse.self, from: data)
+                        let token = decodedResponse.result.token
+                        completion(.success(token))
+                    } catch {
+                        print("Decoding error: \(error)")
+                        completion(.failure(.decodingError))
+                    }
+                    
+                case .failure(let afError):
+                    if let underlyingError = afError.underlyingError {
+                        print("Underlying network error: \(underlyingError.localizedDescription)")
+                        completion(.failure(.networkError(underlyingError)))
+                    } else {
+                        let networkError = self.handleStatusCode(statusCode, data: data)
+                        print("Response status code: \(statusCode)")
+                        print("Response data: \(String(data: data, encoding: .utf8) ?? "Unable to decode data")")
+                        completion(.failure(networkError))
+                    }
+                }
+            }
+    }
+
+    
     func handleStatusCode(
     _ statusCode: Int,
     data: Data
@@ -99,11 +235,10 @@ public class UserService {
     }
     }
 
-    func decodeError(data: Data) -> String {
-    guard let errorResponse = try? JSONDecoder().decode(
-      ErrorResponse.self,
-      from: data
-    ) else { return "" }
-    return errorResponse.code
+    private func decodeError(data: Data) -> String {
+        guard let errorResponse = try? JSONDecoder().decode(ErrorResponse.self, from: data) else {
+            return ""
+        }
+        return errorResponse.code
     }
 }

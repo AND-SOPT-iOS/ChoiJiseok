@@ -39,7 +39,3 @@ enum NetworkError: Error {
     }
   }
 }
-
-struct ErrorResponse: Decodable {
-  let code: String
-}
