@@ -9,7 +9,13 @@ import UIKit
 import SnapKit
 import Then
 
+protocol UserInfoEditControllerDelegate: AnyObject {
+    func didEditUserInfo(newHobby: String)
+}
+
 final class UserInfoEditController: UIViewController {
+    
+    weak var delegate: UserInfoEditControllerDelegate?
     
     private let containerView = UIView()
     
@@ -220,6 +226,9 @@ final class UserInfoEditController: UIViewController {
                 
                 switch result {
                     case .success:
+                    
+                    delegate?.didEditUserInfo(newHobby: hobby)
+                    
                     dismiss(animated: true)
                 case let .failure(error):
                     self.showAlert(title: "변경 실패", message: error.errorMessage)

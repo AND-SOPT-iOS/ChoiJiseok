@@ -305,3 +305,11 @@ extension ServerHomeController: UserLoginControllerDelegate {
         }
     }
 }
+
+
+// MARK: UserInfo Edit
+extension ServerHomeController: UserInfoEditControllerDelegate {
+    func didEditUserInfo(newHobby: String) {
+        showUserHobbyCell(with: newHobby)
+    }
+}
