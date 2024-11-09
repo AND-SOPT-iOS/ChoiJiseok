@@ -11,6 +11,7 @@ import SnapKit
 enum SectionType: Int, CaseIterable, Hashable {
     case profile
     case feature
+    case logout
 }
 
 enum SectionItem: Hashable, Equatable {
@@ -133,6 +134,9 @@ class ServerHomeController: UIViewController {
                        shouldShowArrowIcon: true)
         ], toSection: .feature)
         
+        // 로그아웃
+        snapshot.appendSections([.logout])
+        
         dataSource.apply(snapshot, animatingDifferences: true)
     }
 }
@@ -203,15 +207,20 @@ extension ServerHomeController: LoginViewControllerDelegate {
         var snapshot = dataSource.snapshot()
         
         let profileSectionItems = snapshot.itemIdentifiers(inSection: .profile)
+        let logoutSectionItems = snapshot.itemIdentifiers(inSection: .logout)
         
         snapshot.deleteItems(profileSectionItems)
+        
         snapshot.appendItems([
             .profileCell(name: name),
+        ], toSection: .profile)
+                
+        snapshot.appendItems([
             .plainCell(tag: .logout,
                        title: "로그아웃",
                        titleColor: .systemBlue,
-                       shouldShowArrowIcon: false)
-        ], toSection: .profile)
+                       shouldShowArrowIcon: false),
+        ], toSection: .logout)
         
         dataSource.apply(snapshot, animatingDifferences: false)
     }
@@ -221,8 +230,11 @@ extension ServerHomeController: LoginViewControllerDelegate {
         var snapshot = dataSource.snapshot()
         
         let profileSectionItems = snapshot.itemIdentifiers(inSection: .profile)
+        let logoutSectionItems = snapshot.itemIdentifiers(inSection: .logout)
         
         snapshot.deleteItems(profileSectionItems)
+        snapshot.deleteItems(logoutSectionItems)
+        
         snapshot.appendItems([
             .profilePlaceholderCell,
             .plainCell(tag: .createNewProfile,
