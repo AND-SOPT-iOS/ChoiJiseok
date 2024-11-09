@@ -171,8 +171,8 @@ extension ServerHomeController: UITableViewDelegate {
             case .userHobby: ()
             // 다른 사람 취미 조회
             case .lookupHobby:
-                let otherUserHobbyController = OtherUserHobbyViewController()
-                navigationController?.pushViewController(otherUserHobbyController, animated: true)
+                let userHobbyLookUpController = UserHobbyLookUpController()
+                navigationController?.present(userHobbyLookUpController, animated: true)
             case .logout:
                 // TODO: 로그아웃 기능 구현
                 showNonLoginDefaultLayout()
