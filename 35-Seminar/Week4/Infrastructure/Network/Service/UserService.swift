@@ -26,7 +26,10 @@ public class UserService {
                                          password: password,
                                          hobby: hobby)
           
-        AF.request(url, method: .post, parameters: parameters, encoder: JSONParameterEncoder.default)
+        AF.request(url, 
+                   method: .post,
+                   parameters: parameters,
+                   encoder: JSONParameterEncoder.default)
             .validate()
             .response { [weak self] response in
                 guard let statusCode = response.response?.statusCode,
@@ -47,16 +50,19 @@ public class UserService {
     }
 
     // 2. 사용자 취미 조회
-    func getMyHobby(token: String, 
-                    completion: @escaping (Result<String, NetworkError>) -> Void) {
+    func getMyHobby(completion: @escaping (Result<String, NetworkError>) -> Void) {
         
         let url = Environment.baseURL + "/user/my-hobby"
         
-        let headers: HTTPHeaders = [
-            "token": token
-        ]
+        let authenticator = UserAuthenticator()
+        let credential = UserAuthCredential(accessToken: TokenManager.shared.getAccessToken() ?? "",
+                                            expiredAt: Date(timeIntervalSinceNow: 60 * 120))
+        let interceptor = AuthenticationInterceptor(authenticator: authenticator,
+                                                    credential: credential)
         
-        AF.request(url, method: .get, headers: headers)
+        AF.request(url,
+                   method: .get, 
+                   interceptor: interceptor)
             .validate()
             .response { [weak self] response in
                 guard let statusCode = response.response?.statusCode,
@@ -82,17 +88,20 @@ public class UserService {
     }
 
     // 3. 다른 사용자 취미 조회
-    func getOtherUserHobby(userId: String, 
-                           token: String,
+    func getOtherUserHobby(userId: String,
                            completion: @escaping (Result<String, NetworkError>) -> Void) {
         
         let url = Environment.baseURL + "/user/\(userId)/hobby"
         
-        let headers: HTTPHeaders = [
-            "token": token
-        ]
+        let authenticator = UserAuthenticator()
+        let credential = UserAuthCredential(accessToken: TokenManager.shared.getAccessToken() ?? "",
+                                            expiredAt: Date(timeIntervalSinceNow: 60 * 120))
+        let interceptor = AuthenticationInterceptor(authenticator: authenticator,
+                                                    credential: credential)
         
-        AF.request(url, method: .get, headers: headers)
+        AF.request(url, 
+                   method: .get,
+                   interceptor: interceptor)
             .validate()
             .response { [weak self] response in
                 guard let statusCode = response.response?.statusCode,
@@ -118,20 +127,25 @@ public class UserService {
     }
 
     // 4. 유저 정보 변경
-    func updateUserInfo(token: String,
-                        hobby: String,
+    func updateUserInfo(hobby: String,
                         password: String,
                         completion: @escaping (Result<Bool, NetworkError>) -> Void) {
         
         let url = Environment.baseURL + "/user"
         
-        let headers: HTTPHeaders = [
-            "token": token
-        ]
+        let authenticator = UserAuthenticator()
+        let credential = UserAuthCredential(accessToken: TokenManager.shared.getAccessToken() ?? "",
+                                            expiredAt: Date(timeIntervalSinceNow: 60 * 120))
+        let interceptor = AuthenticationInterceptor(authenticator: authenticator,
+                                                    credential: credential)
         
-        let parameters = UpdateUserRequest(hobby: hobby, password: password)
+        let parameters = UserInfoEditRequest(hobby: hobby, password: password)
         
-        AF.request(url, method: .put, parameters: parameters, encoder: JSONParameterEncoder.default, headers: headers)
+        AF.request(url,
+                   method: .put,
+                   parameters: parameters,
+                   encoder: JSONParameterEncoder.default,
+                   interceptor: interceptor)
             .validate()
             .response { [weak self] response in
                 guard let statusCode = response.response?.statusCode,
@@ -160,7 +174,10 @@ public class UserService {
         
         let parameters = LoginRequest(username: username, password: password)
         
-        AF.request(url, method: .post, parameters: parameters, encoder: JSONParameterEncoder.default)
+        AF.request(url, 
+                   method: .post,
+                   parameters: parameters,
+                   encoder: JSONParameterEncoder.default)
             .validate()
             .response { [weak self] response in
                 guard let statusCode = response.response?.statusCode,

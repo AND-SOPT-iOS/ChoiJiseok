@@ -213,13 +213,7 @@ final class UserInfoEditController: UIViewController {
             return
         }
         
-        guard let token = UserDefaults.standard.string(forKey: "userToken") else {
-            showAlert(title: "변경 실패", message: "토큰이 만료되었습니다.")
-            return
-        }
-        
-        UserService.shared.updateUserInfo(token: token,
-                                          hobby: hobby,
+        UserService.shared.updateUserInfo(hobby: hobby,
                                           password: password) { result in
             DispatchQueue.main.async { [weak self] in
                 guard let self else { return }

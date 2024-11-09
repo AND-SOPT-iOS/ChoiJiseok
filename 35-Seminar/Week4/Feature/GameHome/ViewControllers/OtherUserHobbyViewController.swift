@@ -61,13 +61,12 @@ class OtherUserHobbyViewController: UIViewController {
     }
     
     @objc private func fetchHobbyTapped() {
-        guard let userId = userIdTextField.text, !userId.isEmpty,
-              let token = UserDefaults.standard.string(forKey: "userToken") else {
+        guard let userId = userIdTextField.text, !userId.isEmpty else {
             hobbyLabel.text = "사용자 ID를 입력해주세요."
             return
         }
         
-        UserService.shared.getOtherUserHobby(userId: userId, token: token) { [weak self] result in
+        UserService.shared.getOtherUserHobby(userId: userId) { [weak self] result in
             switch result {
             case .success(let hobby):
                 self?.hobbyLabel.text = "다른 사람의 취미: \(hobby)"

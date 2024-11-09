@@ -140,9 +140,9 @@ class UserLoginController: UIViewController {
             
             switch result {
             case .success(let token):
-                
+
                 // 토큰 저장
-                UserDefaults.standard.set(token, forKey: "userToken")
+                TokenManager.shared.setAccessToken(token)
 
                 delegate?.didLogin(username: username)
 

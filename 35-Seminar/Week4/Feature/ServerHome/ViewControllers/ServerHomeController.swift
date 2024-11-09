@@ -291,12 +291,8 @@ extension ServerHomeController: UserLoginControllerDelegate {
     func didLogin(username: String) {
         showLoginDefaultLayout(with: username)
         
-        guard let token = UserDefaults.standard.string(forKey: "userToken") else {
-            return
-        }
-        
         // 사용자 취미 조회
-        UserService.shared.getMyHobby(token: token) { [weak self] result in
+        UserService.shared.getMyHobby { [weak self] result in
             guard let self else { return }
             
             switch result {
