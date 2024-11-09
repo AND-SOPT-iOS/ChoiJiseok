@@ -157,8 +157,10 @@ extension ServerHomeController: UITableViewDelegate {
             navigationController?.present(userLoginController, animated: true)
             
         case .profileCell(let name):
-            let userInfoEditController = UserInfoEditController()
-            userInfoEditController.setUI(name: name)
+            let userInfoEditController = UserInfoEditController().then {
+                $0.delegate = self
+                $0.setUI(name: name)
+            }
             navigationController?.present(userInfoEditController, animated: true)
             
         case .plainCell(let tag, _, _, _, _):
@@ -174,7 +176,7 @@ extension ServerHomeController: UITableViewDelegate {
                 let userHobbyLookUpController = UserHobbyLookUpController()
                 navigationController?.present(userHobbyLookUpController, animated: true)
             case .logout:
-                // TODO: 로그아웃 기능 구현
+                TokenManager.shared.clearTokens()
                 showNonLoginDefaultLayout()
             }
         }
