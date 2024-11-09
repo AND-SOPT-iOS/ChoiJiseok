@@ -156,8 +156,10 @@ extension ServerHomeController: UITableViewDelegate {
             }
             navigationController?.present(userLoginController, animated: true)
             
-        case .profileCell: ()
-            // TODO: 유저 정보 수정 기능 구현
+        case .profileCell(let name):
+            let userInfoEditController = UserInfoEditController()
+            userInfoEditController.setUI(name: name)
+            navigationController?.present(userInfoEditController, animated: true)
             
         case .plainCell(let tag, _, _, _, _):
             switch tag {
