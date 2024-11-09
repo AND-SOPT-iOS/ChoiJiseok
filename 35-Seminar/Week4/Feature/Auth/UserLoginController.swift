@@ -136,19 +136,21 @@ class UserLoginController: UIViewController {
         
         UserService.shared.login(username: username, 
                                  password: password) { [weak self] result in
-            guard let self else { return }
-            
-            switch result {
-            case .success(let token):
-
-                // 토큰 저장
-                TokenManager.shared.setAccessToken(token)
-
-                delegate?.didLogin(username: username)
-
-                dismiss(animated: true)
-            case .failure(let error):
-                showAlert(title: "로그인 실패", message: error.errorMessage)
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                
+                switch result {
+                case .success(let token):
+                    
+                    // 토큰 저장
+                    TokenManager.shared.setAccessToken(token)
+                    
+                    delegate?.didLogin(username: username)
+                    
+                    dismiss(animated: true)
+                case .failure(let error):
+                    showAlert(title: "로그인 실패", message: error.errorMessage)
+                }
             }
         }
     }

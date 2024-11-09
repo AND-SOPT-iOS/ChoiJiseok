@@ -155,15 +155,18 @@ class UserHobbyLookUpController: UIViewController {
         }
         
         UserService.shared.getOtherUserHobby(userId: userId) { [weak self] result in
-            guard let self else { return }
             
-            switch result {
-            case .success(let hobby):
-                hobbyLabel.attributedText = .makeAttributedString(text: hobby,
-                                                                  color: .black,
-                                                                  font: UIFont.systemFont(ofSize: 16, weight: .regular))
-            case .failure(let error):
-                showAlert(title: "조회 실패", message: error.errorMessage)
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                
+                switch result {
+                case .success(let hobby):
+                    hobbyLabel.attributedText = .makeAttributedString(text: hobby,
+                                                                      color: .black,
+                                                                      font: UIFont.systemFont(ofSize: 16, weight: .regular))
+                case .failure(let error):
+                    showAlert(title: "조회 실패", message: error.errorMessage)
+                }
             }
         }
     }

@@ -295,15 +295,16 @@ extension ServerHomeController: UserLoginControllerDelegate {
         
         // 사용자 취미 조회
         UserService.shared.getMyHobby { [weak self] result in
-            guard let self else { return }
-            
-            switch result {
-            case .success(let hobby):
-                showUserHobbyCell(with: hobby)
-            case .failure(let error):
-                showAlert(title: "취미 조회 실패", message: error.errorMessage)
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                
+                switch result {
+                case .success(let hobby):
+                    showUserHobbyCell(with: hobby)
+                case .failure(let error):
+                    showAlert(title: "취미 조회 실패", message: error.errorMessage)
+                }
             }
-            
         }
     }
 }
