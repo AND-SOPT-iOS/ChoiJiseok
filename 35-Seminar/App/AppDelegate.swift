@@ -10,10 +10,14 @@ import UIKit
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
-
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        
+        // 앱 삭제 후 재설치하는 경우, 토큰 초기화 (KeyChain에 저장된 토큰 제거)
+        if TokenManager.shared.isNewUser {
+            TokenManager.shared.clearTokens()
+            TokenManager.shared.isNewUser = false
+        }
+        
         return true
     }
 

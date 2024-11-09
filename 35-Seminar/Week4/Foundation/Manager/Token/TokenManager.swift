@@ -14,18 +14,15 @@ final class TokenManager {
     
     private init() {}
     
-    private let isNewUser = Const.isNewUser
-    private let accessTokenKey = Const.accessTokenKey
     
-    
-    // 토큰 초기화 필요 여부
+    // 신규 유저 여부
     /// 디바이스에서 어플리케이션을 제거 후 다시 설치하는 경우, KeyChain에 저장되어 있던 토큰 제거 필요
-    var shouldClearTokens: Bool {
+    var isNewUser: Bool {
         get {
-            return UserDefaults.standard.bool(forKey: isNewUser)
+            return UserDefaults.standard.value(forKey: Const.isNewUser) as? Bool ?? true
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: isNewUser)
+            UserDefaults.standard.set(newValue, forKey: Const.isNewUser)
         }
     }
      
@@ -37,7 +34,7 @@ final class TokenManager {
         
         let query = [
             kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: accessTokenKey,
+            kSecAttrAccount as String: Const.accessTokenKey,
             kSecValueData as String: data
         ] as CFDictionary
         
@@ -53,7 +50,7 @@ final class TokenManager {
         
         let query = [
             kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: accessTokenKey,
+            kSecAttrAccount as String: Const.accessTokenKey,
             kSecReturnData: kCFBooleanTrue as Any,  // CFData 타입으로 불러옴
             kSecMatchLimit: kSecMatchLimitOne       // 중복되는 경우, 하나의 값만 불러옴
         ] as CFDictionary
@@ -75,7 +72,7 @@ final class TokenManager {
     func clearTokens() {
         let query = [
             kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: accessTokenKey
+            kSecAttrAccount as String: Const.accessTokenKey
         ] as CFDictionary
         
         SecItemDelete(query)
