@@ -148,8 +148,7 @@ class UserLoginController: UIViewController {
 
                 dismiss(animated: true)
             case .failure(let error):
-                showLoginFailedAlert(on: self,
-                                     message: error.errorMessage)
+                showAlert(title: "로그인 실패", message: error.errorMessage)
             }
         }
     }
@@ -157,19 +156,5 @@ class UserLoginController: UIViewController {
     
     private func cancelButtonDidTap() {
         dismiss(animated: true)
-    }
-    
-    
-    func showLoginFailedAlert(on viewController: UIViewController, message: String) {
-        let alertController = UIAlertController(
-            title: "로그인 실패",
-            message: message,
-            preferredStyle: .alert
-        )
-        
-        let confirmAction = UIAlertAction(title: "확인", style: .default, handler: nil)
-        alertController.addAction(confirmAction)
-        
-        viewController.present(alertController, animated: true)
     }
 }

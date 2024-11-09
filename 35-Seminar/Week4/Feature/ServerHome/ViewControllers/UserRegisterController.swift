@@ -165,37 +165,23 @@ final class UserRegisterController: UIViewController {
         hobby = !hobby.isEmpty ? hobby : "없음"
         
         guard !username.isEmpty, !password.isEmpty else {
-            showRegisterFailureAlert(message: "사용자 이름과 비밀번호는 필수 항목입니다.")
+            showAlert(title: "가입 실패", message: "사용자 이름과 비밀번호는 필수 항목입니다.")
             return
         }
         
         UserService.shared.register(username: username,
-                                   password: password,
-                                   hobby: hobby) { result in
+                                    password: password,
+                                    hobby: hobby) { result in
             DispatchQueue.main.async { [weak self] in
                 guard let self else { return }
                 
                 switch result {
-                    case .success:
+                case .success:
                     dismiss(animated: true)
                 case let .failure(error):
-                    self.showRegisterFailureAlert(message: error.errorMessage)
+                    showAlert(title: "가입 실패", message: error.errorMessage)
                 }
             }
         }
-    }
-    
-    
-    private func showRegisterFailureAlert(message: String) {
-        let alertController = UIAlertController(
-            title: "가입 실패",
-            message: message,
-            preferredStyle: .alert
-        )
-        
-        let confirmAction = UIAlertAction(title: "확인", style: .default, handler: nil)
-        alertController.addAction(confirmAction)
-        
-        present(alertController, animated: true)
     }
 }
