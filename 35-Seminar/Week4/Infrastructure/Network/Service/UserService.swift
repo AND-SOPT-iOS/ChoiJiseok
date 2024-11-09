@@ -53,12 +53,8 @@ public class UserService {
     func getMyHobby(completion: @escaping (Result<String, NetworkError>) -> Void) {
         
         let url = Environment.baseURL + "/user/my-hobby"
-        
-        let authenticator = UserAuthenticator()
-        let credential = UserAuthCredential(accessToken: TokenManager.shared.getAccessToken() ?? "",
-                                            expiredAt: Date(timeIntervalSinceNow: 60 * 120))
-        let interceptor = AuthenticationInterceptor(authenticator: authenticator,
-                                                    credential: credential)
+
+        let interceptor = makeUserAuthInterceptor()
         
         AF.request(url,
                    method: .get, 
@@ -93,13 +89,9 @@ public class UserService {
         
         let url = Environment.baseURL + "/user/\(userId)/hobby"
         
-        let authenticator = UserAuthenticator()
-        let credential = UserAuthCredential(accessToken: TokenManager.shared.getAccessToken() ?? "",
-                                            expiredAt: Date(timeIntervalSinceNow: 60 * 120))
-        let interceptor = AuthenticationInterceptor(authenticator: authenticator,
-                                                    credential: credential)
+        let interceptor = makeUserAuthInterceptor()
         
-        AF.request(url, 
+        AF.request(url,
                    method: .get,
                    interceptor: interceptor)
             .validate()
@@ -133,13 +125,9 @@ public class UserService {
         
         let url = Environment.baseURL + "/user"
         
-        let authenticator = UserAuthenticator()
-        let credential = UserAuthCredential(accessToken: TokenManager.shared.getAccessToken() ?? "",
-                                            expiredAt: Date(timeIntervalSinceNow: 60 * 120))
-        let interceptor = AuthenticationInterceptor(authenticator: authenticator,
-                                                    credential: credential)
-        
         let parameters = UserInfoEditRequest(hobby: hobby, password: password)
+        
+        let interceptor = makeUserAuthInterceptor()
         
         AF.request(url,
                    method: .put,
@@ -230,6 +218,14 @@ public class UserService {
             return ""
         }
         return errorResponse.code
+    }
+    
+    
+    private func makeUserAuthInterceptor() -> AuthenticationInterceptor<UserAuthenticator> {
+        let authenticator = UserAuthenticator()
+        let credential = UserAuthCredential(accessToken: TokenManager.shared.getAccessToken() ?? "",
+                                            expiredAt: Date(timeIntervalSinceNow: 60 * 120))  // 2시간 남았다고 가정
+        return AuthenticationInterceptor(authenticator: authenticator, credential: credential)
     }
 }
 
