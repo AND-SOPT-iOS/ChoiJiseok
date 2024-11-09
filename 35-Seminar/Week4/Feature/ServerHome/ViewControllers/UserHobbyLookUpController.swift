@@ -177,7 +177,6 @@ class UserHobbyLookUpController: UIViewController {
 
 extension UserHobbyLookUpController: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        print("textFieldDidBeginEditing called")  // Debugging line
         hobbyLabel.attributedText = nil
     }
 }
