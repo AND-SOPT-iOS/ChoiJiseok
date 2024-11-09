@@ -1,5 +1,5 @@
 //
-//  LoginViewController.swift
+//  UserLoginController.swift
 //  35-Seminar
 //
 //  Created by 최지석 on 11/8/24.
@@ -7,14 +7,15 @@
 
 import UIKit
 import SnapKit
+import Then
 
-protocol LoginViewControllerDelegate: AnyObject {
-    func didLogin(userName: String)
+protocol UserLoginControllerDelegate: AnyObject {
+    func didLogin(username: String)
 }
 
-class LoginViewController: UIViewController {
+class UserLoginController: UIViewController {
     
-    weak var delegate: LoginViewControllerDelegate?
+    weak var delegate: UserLoginControllerDelegate?
     
     private let containerView = UIView()
     
@@ -35,7 +36,7 @@ class LoginViewController: UIViewController {
     }
     
     private let usernameTextField = UITextField().then {
-        $0.placeholder = "사용자 이름"
+        $0.placeholder = "이름"
         $0.clipsToBounds = true
         $0.layer.cornerRadius = 10
         $0.backgroundColor = UIColor.secondarySystemBackground
@@ -143,7 +144,7 @@ class LoginViewController: UIViewController {
                 // 토큰 저장
                 UserDefaults.standard.set(token, forKey: "userToken")
 
-                delegate?.didLogin(userName: username)
+                delegate?.didLogin(username: username)
 
                 dismiss(animated: true)
             case .failure(let error):

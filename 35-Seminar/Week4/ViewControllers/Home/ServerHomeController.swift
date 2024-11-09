@@ -111,8 +111,9 @@ class ServerHomeController: UIViewController {
     
     private func initializeDataSource() {
         var snapshot = NSDiffableDataSourceSnapshot<SectionType, SectionItem>()
+
+        // MARK: 프로필
         snapshot.appendSections([.profile])
-        // 프로필
         snapshot.appendItems([
             .profilePlaceholderCell,
             .plainCell(tag: .createNewProfile,
@@ -121,7 +122,7 @@ class ServerHomeController: UIViewController {
                        shouldShowArrowIcon: false)
         ], toSection: .profile)
         
-        // 기능
+        // MARK: 기능
         snapshot.appendSections([.feature])
         snapshot.appendItems([
             .plainCell(tag: .lookupMyHobby,
@@ -134,7 +135,7 @@ class ServerHomeController: UIViewController {
                        shouldShowArrowIcon: true)
         ], toSection: .feature)
         
-        // 로그아웃
+        // MARK: 로그아웃
         snapshot.appendSections([.logout])
         
         dataSource.apply(snapshot, animatingDifferences: true)
@@ -152,9 +153,10 @@ extension ServerHomeController: UITableViewDelegate {
         
         switch item {
         case .profilePlaceholderCell:
-            let loginViewController = LoginViewController()
-            loginViewController.delegate = self
-            present(loginViewController, animated: true)
+            let userLoginController = UserLoginController().then {
+                $0.delegate = self
+            }
+            navigationController?.present(userLoginController, animated: true)
             
         case .profileCell: ()
             // TODO: 유저 정보 수정 기능 구현
@@ -164,7 +166,7 @@ extension ServerHomeController: UITableViewDelegate {
             // 새 프로필 생성
             case .createNewProfile:
                 let userRegisterController = UserRegisterController()
-                navigationController?.pushViewController(userRegisterController, animated: true)
+                navigationController?.present(userRegisterController, animated: true)
             // 내 취미 조회
             case .lookupMyHobby:
                 let myHobbyController = MyHobbyViewController()
@@ -196,18 +198,12 @@ extension ServerHomeController: UITableViewDelegate {
 }
 
 
-// MARK: User Login/Out
-extension ServerHomeController: LoginViewControllerDelegate {
-    func didLogin(userName: String) {
-        showUserProfileSection(with: userName)
-    }
-    
-    
+// MARK: Section Layout
+extension ServerHomeController {
     private func showUserProfileSection(with name: String) {
         var snapshot = dataSource.snapshot()
         
         let profileSectionItems = snapshot.itemIdentifiers(inSection: .profile)
-        let logoutSectionItems = snapshot.itemIdentifiers(inSection: .logout)
         
         snapshot.deleteItems(profileSectionItems)
         
@@ -244,5 +240,13 @@ extension ServerHomeController: LoginViewControllerDelegate {
         ], toSection: .profile)
         
         dataSource.apply(snapshot, animatingDifferences: false)
+    }
+}
+
+
+// MARK: Login
+extension ServerHomeController: UserLoginControllerDelegate {
+    func didLogin(username: String) {
+        showUserProfileSection(with: username)
     }
 }
