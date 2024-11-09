@@ -20,14 +20,15 @@ enum SectionItem: Hashable, Equatable {
     case plainCell(tag: PlainCellTag,
                    title: String, 
                    titleColor: UIColor,
+                   subTitle: String? = nil,
                    shouldShowArrowIcon: Bool)
 }
 
 enum PlainCellTag: Equatable {
     case logout              // 로그아웃
     case createNewProfile    // 새 프로필 생성
-    case lookupMyHobby       // 내 취미 조회
-    case lookupOthersHobby   // 다른 사람 취미 조회
+    case userHobby           // 사용자 취미
+    case lookupHobby   // 다른 사용자 취미 조회
 }
 
 
@@ -93,7 +94,7 @@ class ServerHomeController: UIViewController {
                 return cell
             
             // MARK: 기본 셀
-            case .plainCell(_, let title, let titleColor, let shouldShowArrowIcon):
+            case .plainCell(_, let title, let titleColor, let subTitle, let shouldShowArrowIcon):
                 guard let cell = tableView.dequeueReusableCell(withIdentifier: PlainTableViewCell.identifier,
                                                                for: indexPath) as? PlainTableViewCell else {
                     return UITableViewCell()
@@ -101,6 +102,7 @@ class ServerHomeController: UIViewController {
                 
                 cell.setUI(title: title,
                            titleColor: titleColor,
+                           subTitle: subTitle,
                            shouldShowArrowIcon: shouldShowArrowIcon)
                 
                 return cell
@@ -125,12 +127,8 @@ class ServerHomeController: UIViewController {
         // MARK: 기능
         snapshot.appendSections([.feature])
         snapshot.appendItems([
-            .plainCell(tag: .lookupMyHobby,
-                       title: "내 취미 조회하기",
-                       titleColor: .black,
-                       shouldShowArrowIcon: true),
-            .plainCell(tag: .lookupOthersHobby,
-                       title: "다른 사람 취미 조회하기",
+            .plainCell(tag: .lookupHobby,
+                       title: "취미 조회하기",
                        titleColor: .black,
                        shouldShowArrowIcon: true)
         ], toSection: .feature)
@@ -161,23 +159,21 @@ extension ServerHomeController: UITableViewDelegate {
         case .profileCell: ()
             // TODO: 유저 정보 수정 기능 구현
             
-        case .plainCell(let tag, _, _, _):
+        case .plainCell(let tag, _, _, _, _):
             switch tag {
             // 새 프로필 생성
             case .createNewProfile:
                 let userRegisterController = UserRegisterController()
                 navigationController?.present(userRegisterController, animated: true)
             // 내 취미 조회
-            case .lookupMyHobby:
-                let myHobbyController = MyHobbyViewController()
-                navigationController?.pushViewController(myHobbyController, animated: true)
+            case .userHobby: ()
             // 다른 사람 취미 조회
-            case .lookupOthersHobby:
+            case .lookupHobby:
                 let otherUserHobbyController = OtherUserHobbyViewController()
                 navigationController?.pushViewController(otherUserHobbyController, animated: true)
             case .logout:
                 // TODO: 로그아웃 기능 구현
-                showUserProfilePlaceholderSection()
+                showNonLoginDefaultLayout()
             }
         }
     }
@@ -200,17 +196,28 @@ extension ServerHomeController: UITableViewDelegate {
 
 // MARK: Section Layout
 extension ServerHomeController {
-    private func showUserProfileSection(with name: String) {
+    private func showLoginDefaultLayout(with name: String) {
+        
         var snapshot = dataSource.snapshot()
         
+        // 프로필 영역
         let profileSectionItems = snapshot.itemIdentifiers(inSection: .profile)
-        
         snapshot.deleteItems(profileSectionItems)
-        
         snapshot.appendItems([
             .profileCell(name: name),
         ], toSection: .profile)
                 
+        // 기능 영역
+        let featureSectionItems = snapshot.itemIdentifiers(inSection: .feature)
+        snapshot.deleteItems(featureSectionItems)
+        snapshot.appendItems([
+            .plainCell(tag: .lookupHobby,
+                       title: "취미 조회하기",
+                       titleColor: .black,
+                       shouldShowArrowIcon: true)
+        ], toSection: .feature)
+        
+        // 로그아웃 영역 (추가)
         snapshot.appendItems([
             .plainCell(tag: .logout,
                        title: "로그아웃",
@@ -222,15 +229,13 @@ extension ServerHomeController {
     }
     
     
-    private func showUserProfilePlaceholderSection() {
+    private func showNonLoginDefaultLayout() {
+        
         var snapshot = dataSource.snapshot()
         
+        // 프로필 영역
         let profileSectionItems = snapshot.itemIdentifiers(inSection: .profile)
-        let logoutSectionItems = snapshot.itemIdentifiers(inSection: .logout)
-        
         snapshot.deleteItems(profileSectionItems)
-        snapshot.deleteItems(logoutSectionItems)
-        
         snapshot.appendItems([
             .profilePlaceholderCell,
             .plainCell(tag: .createNewProfile,
@@ -238,6 +243,41 @@ extension ServerHomeController {
                        titleColor: .systemBlue,
                        shouldShowArrowIcon: false)
         ], toSection: .profile)
+        
+        // 기능 영역
+        let featureSectionItems = snapshot.itemIdentifiers(inSection: .feature)
+        snapshot.deleteItems(featureSectionItems)
+        snapshot.appendItems([
+            .plainCell(tag: .lookupHobby,
+                       title: "취미 조회하기",
+                       titleColor: .black,
+                       shouldShowArrowIcon: true)
+        ], toSection: .feature)
+        
+        // 로그아웃 영역 (제거)
+        let logoutSectionItems = snapshot.itemIdentifiers(inSection: .logout)
+        snapshot.deleteItems(logoutSectionItems)
+        
+        dataSource.apply(snapshot, animatingDifferences: false)
+    }
+    
+
+    private func showUserHobbyCell(with hobby: String) {
+        var snapshot = dataSource.snapshot()
+        
+        let featureSectionItems = snapshot.itemIdentifiers(inSection: .feature)
+        snapshot.deleteItems(featureSectionItems)
+        snapshot.appendItems([
+            .plainCell(tag: .userHobby,
+                       title: "내 취미",
+                       titleColor: .black,
+                       subTitle: hobby,
+                       shouldShowArrowIcon: false),
+            .plainCell(tag: .lookupHobby,
+                       title: "사용자 취미 조회",
+                       titleColor: .black,
+                       shouldShowArrowIcon: true)
+        ], toSection: .feature)
         
         dataSource.apply(snapshot, animatingDifferences: false)
     }
@@ -247,6 +287,23 @@ extension ServerHomeController {
 // MARK: Login
 extension ServerHomeController: UserLoginControllerDelegate {
     func didLogin(username: String) {
-        showUserProfileSection(with: username)
+        showLoginDefaultLayout(with: username)
+        
+        guard let token = UserDefaults.standard.string(forKey: "userToken") else {
+            return
+        }
+        
+        // 사용자 취미 조회
+        UserService.shared.getMyHobby(token: token) { [weak self] result in
+            guard let self else { return }
+            
+            switch result {
+            case .success(let hobby):
+                showUserHobbyCell(with: hobby)
+            case .failure(let error):
+                showAlert(title: "취미 조회 실패", message: error.errorMessage)
+            }
+            
+        }
     }
 }
