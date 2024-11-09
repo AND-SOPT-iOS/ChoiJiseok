@@ -30,6 +30,12 @@ class PlainTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        clearUI()
+    }
+    
     
     private func makeUI() {
         contentView.addSubview(rightArrowIconImageView)
@@ -42,13 +48,24 @@ class PlainTableViewCell: UITableViewCell {
     }
     
     
-    public func setData(title: String, 
-                        titleColor: UIColor,
-                        shouldShowArrowIcon: Bool) {
-        textLabel?.text = title
-        textLabel?.textColor = titleColor
+    public func setUI(title: String,
+                      titleColor: UIColor,
+                      shouldShowArrowIcon: Bool) {
+        
+        var config = UIListContentConfiguration.cell()
+        config.attributedText = .makeAttributedString(text: title,
+                                                      color: titleColor,
+                                                      font: .systemFont(ofSize: 18, weight: .regular))
+    
+        contentConfiguration = config
         
         rightArrowIconImageView.isHidden = !shouldShowArrowIcon
+    }
+    
+    
+    private func clearUI() {
+        contentConfiguration = nil
+        rightArrowIconImageView.isHidden = true
     }
 }
 

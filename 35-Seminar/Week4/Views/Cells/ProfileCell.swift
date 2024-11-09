@@ -11,21 +11,6 @@ import SnapKit
 
 class ProfileCell: UITableViewCell {
     
-    private let placeholderContainerView = UIView()
-    
-    private let placeholderIconImageView = UIImageView().then {
-        let imageConfig = UIImage.SymbolConfiguration(pointSize: 18, weight: .medium)
-        $0.image = UIImage(systemName: "person.crop.circle", withConfiguration: imageConfig)
-        $0.tintColor = .systemBlue
-        $0.contentMode = .scaleAspectFit
-    }
-    
-    private let placeholderTitleLabel = UILabel().then {
-        $0.attributedText = .makeAttributedString(text: "Apple 계정으로 로그인",
-                                                  color: .systemBlue,
-                                                  font: UIFont.systemFont(ofSize: 18, weight: .medium))
-    }
-    
     private let profileContainerView = UIView()
     
     private let profileThumbnailImageView = UIImageView().then {
@@ -63,18 +48,12 @@ class ProfileCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         
-        showPlaceholder()
+        clearUI()
     }
     
     
     private func makeUI() {
         contentView.addSubViews(
-            // 플레이스 홀더
-            placeholderContainerView.addSubViews(
-                placeholderIconImageView,
-                placeholderTitleLabel
-            ),
-            // 유저 프로필
             profileContainerView.addSubViews(
                 profileThumbnailImageView,
                 profileContentsStackView.addArrangedSubViews(
@@ -84,21 +63,6 @@ class ProfileCell: UITableViewCell {
             )
         )
         
-        placeholderContainerView.snp.makeConstraints {
-            $0.edges.equalToSuperview()
-        }
-        
-        placeholderIconImageView.snp.makeConstraints {
-            $0.leading.equalToSuperview().offset(12)
-            $0.centerY.equalToSuperview()
-            $0.size.equalTo(60)
-        }
-        
-        placeholderTitleLabel.snp.makeConstraints {
-            $0.leading.equalTo(placeholderIconImageView.snp.trailing).offset(12)
-            $0.centerY.equalToSuperview()
-        }
-        
         profileContainerView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
@@ -106,30 +70,25 @@ class ProfileCell: UITableViewCell {
         profileThumbnailImageView.snp.makeConstraints {
             $0.leading.equalToSuperview().offset(12)
             $0.centerY.equalToSuperview()
-            $0.size.equalTo(60)
+            $0.size.equalTo(72)
         }
         
         profileContentsStackView.snp.makeConstraints {
             $0.leading.equalTo(profileThumbnailImageView.snp.trailing).offset(12)
             $0.centerY.equalToSuperview()
         }
-        
-        showPlaceholder()
     }
     
     
-    public func showPlaceholder() {
-        placeholderContainerView.isHidden = false
-        profileContainerView.isHidden = true
-    }
-    
-    
-    public func showUserProfile(name: String?) {
-        placeholderContainerView.isHidden = true
-        profileContainerView.isHidden = false
-        
-        profileUserNameLabel.attributedText = .makeAttributedString(text: name ?? "이름 없음",
+    public func setUI(name: String) {
+        profileUserNameLabel.attributedText = .makeAttributedString(text: name,
                                                                     color: .black,
-                                                                    font: UIFont.systemFont(ofSize: 20, weight: .medium))
+                                                                    font: UIFont.systemFont(ofSize: 20,
+                                                                                            weight: .regular))
+    }
+    
+    
+    private func clearUI() {
+        profileUserNameLabel.attributedText = nil
     }
 }
