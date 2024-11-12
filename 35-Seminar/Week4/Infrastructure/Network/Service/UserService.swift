@@ -12,7 +12,20 @@ public class UserService {
     
     static let shared = UserService()
     
-    private init() { }
+    private let session: Session
+    
+    init() {
+        let authenticator = UserAuthenticator()
+        let credential = UserAuthCredential(accessToken: TokenManager.shared.getAccessToken() ?? "",
+                                            expiredAt: Date(timeIntervalSinceNow: 60 * 120))
+        let interceptor = AuthenticationInterceptor(authenticator: authenticator,
+                                                    credential: credential)
+        let logger = APIEventLogger()
+        
+        session = Session(interceptor: interceptor,
+                          cachedResponseHandler: nil,
+                          eventMonitors: [logger])
+    }
 
     // 1. 사용자 등록
     func register(username: String,
@@ -53,12 +66,9 @@ public class UserService {
     func getMyHobby(completion: @escaping (Result<String, NetworkError>) -> Void) {
         
         let url = Environment.baseURL + "/user/my-hobby"
-
-        let interceptor = makeUserAuthInterceptor()
         
-        AF.request(url,
-                   method: .get, 
-                   interceptor: interceptor)
+        session.request(url,
+                        method: .get)
             .validate()
             .response { [weak self] response in
                 guard let statusCode = response.response?.statusCode,
@@ -89,11 +99,8 @@ public class UserService {
         
         let url = Environment.baseURL + "/user/\(userId)/hobby"
         
-        let interceptor = makeUserAuthInterceptor()
-        
-        AF.request(url,
-                   method: .get,
-                   interceptor: interceptor)
+        session.request(url,
+                   method: .get)
             .validate()
             .response { [weak self] response in
                 guard let statusCode = response.response?.statusCode,
@@ -127,13 +134,10 @@ public class UserService {
         
         let parameters = UserInfoEditRequest(hobby: hobby, password: password)
         
-        let interceptor = makeUserAuthInterceptor()
-        
-        AF.request(url,
-                   method: .put,
-                   parameters: parameters,
-                   encoder: JSONParameterEncoder.default,
-                   interceptor: interceptor)
+        session.request(url,
+                        method: .put,
+                        parameters: parameters,
+                        encoder: JSONParameterEncoder.default)
             .validate()
             .response { [weak self] response in
                 guard let statusCode = response.response?.statusCode,
@@ -219,17 +223,4 @@ public class UserService {
         }
         return errorResponse.code
     }
-    
-    
-    private func makeUserAuthInterceptor() -> AuthenticationInterceptor<UserAuthenticator> {
-        let authenticator = UserAuthenticator()
-        let credential = UserAuthCredential(accessToken: TokenManager.shared.getAccessToken() ?? "",
-                                            expiredAt: Date(timeIntervalSinceNow: 60 * 120))  // 2시간 남았다고 가정
-        return AuthenticationInterceptor(authenticator: authenticator, credential: credential)
-    }
-}
-
-
-enum Environment {
-    static let baseURL: String = Bundle.main.infoDictionary?["BASE_URL"] as! String
 }
