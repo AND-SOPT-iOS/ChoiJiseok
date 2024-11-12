@@ -1,0 +1,94 @@
+//
+//  ProfileCell.swift
+//  35-Seminar
+//
+//  Created by 최지석 on 11/8/24.
+//
+
+import UIKit
+import Then
+import SnapKit
+
+class ProfileCell: UITableViewCell {
+    
+    private let profileContainerView = UIView()
+    
+    private let profileThumbnailImageView = UIImageView().then {
+        let imageConfig = UIImage.SymbolConfiguration(pointSize: 18, weight: .medium)
+        $0.image = UIImage(systemName: "person.crop.circle", withConfiguration: imageConfig)
+        $0.tintColor = .gray
+        $0.contentMode = .scaleAspectFit
+    }
+    
+    private let profileContentsStackView = UIStackView().then {
+        $0.axis = .vertical
+        $0.spacing = 4
+        $0.alignment = .leading
+    }
+
+    private let profileUserNameLabel = UILabel()
+    
+    private let profileUserEmailLabel = UILabel().then {
+        $0.attributedText = .makeAttributedString(text: "Testflight@gmail.com",
+                                                  color: .gray,
+                                                  font: UIFont.systemFont(ofSize: 12, weight: .regular))
+    }
+    
+    
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
+        makeUI()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        clearUI()
+    }
+    
+    
+    private func makeUI() {
+        contentView.addSubViews(
+            profileContainerView.addSubViews(
+                profileThumbnailImageView,
+                profileContentsStackView.addArrangedSubViews(
+                    profileUserNameLabel,
+                    profileUserEmailLabel
+                )
+            )
+        )
+        
+        profileContainerView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+        
+        profileThumbnailImageView.snp.makeConstraints {
+            $0.leading.equalToSuperview().offset(12)
+            $0.centerY.equalToSuperview()
+            $0.size.equalTo(72)
+        }
+        
+        profileContentsStackView.snp.makeConstraints {
+            $0.leading.equalTo(profileThumbnailImageView.snp.trailing).offset(12)
+            $0.centerY.equalToSuperview()
+        }
+    }
+    
+    
+    public func setUI(name: String) {
+        profileUserNameLabel.attributedText = .makeAttributedString(text: name,
+                                                                    color: .black,
+                                                                    font: UIFont.systemFont(ofSize: 20,
+                                                                                            weight: .regular))
+    }
+    
+    
+    private func clearUI() {
+        profileUserNameLabel.attributedText = nil
+    }
+}

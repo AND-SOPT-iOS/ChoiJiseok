@@ -189,8 +189,6 @@ extension Seminar3TableViewTestController: UITableViewDelegate, UITableViewDataS
 
 final class TableViewCell: UITableViewCell {
     
-    static let identifier = "TableViewCell"
-    
     private let containerView = UIView()
     
     private let appIconImageView = UIImageView().then {
