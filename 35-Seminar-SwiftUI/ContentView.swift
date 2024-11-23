@@ -16,16 +16,57 @@ struct ContentView: View {
     @State var role: String = "파트원"
     @State var mbti: String = "INFP"
     
+    @State var appModels: [AppModel] = MockData.data
+    
     var body: some View {
-        VStack {
-            ProfileImageView(profileImageName: profileImageName)
-            ProfileInfoView(department: department,
-                            name: name,
-                            generation: generation,
-                            role: role,
-                            mbti: mbti)
+        
+        GeometryReader { proxy in
+            ZStack(alignment: .bottom) {
+                ScrollView {
+                    VStack {
+                        VStack {
+                            ProfileImageView(profileImageName: profileImageName)
+                            ProfileInfoView(department: department,
+                                            name: name,
+                                            generation: generation,
+                                            role: role,
+                                            mbti: mbti)
+                        }
+                        .padding()
+                        
+                        List {
+                            ForEach(MockData.data) { appModel in
+                                AppDetailCell(appModel: appModel)
+                            }
+                        }
+                        .frame(height: 600)
+                        .listRowInsets(.none)
+                        .listStyle(.plain)
+                    }
+                    
+                    Spacer()
+                        .frame(height: 120)
+                }
+                
+                ZStack(alignment: .top) {
+                    Color.white
+                    Button {
+                        // buttonHandler?()
+                    } label: {
+                        Text("DM 보내기")
+                            .frame(width: proxy.size.width - 40, height: 60)
+                            .font(.body)
+                            .fontWeight(.semibold)
+                            .background(.blue)
+                            .foregroundStyle(.white)
+                            .clipShape(.buttonBorder)
+                    }
+                    .padding(.top)
+                }
+                .frame(height: 110)
+            }
+            .ignoresSafeArea(edges: .bottom)
         }
-        .padding()
     }
 }
 
