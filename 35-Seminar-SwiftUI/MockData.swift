@@ -8,7 +8,15 @@
 import Foundation
 
 struct MockData {
-    static let data = [
+    
+    static let userModel = UserModel(profileImageName: "person",
+                                     department: "iOS",
+                                     name: "최지석",
+                                     generation: "00년생",
+                                     role: "파트원",
+                                     mbti: "INFP")
+    
+    static let appModels = [
         AppModel(id: UUID(),
             imageName: "person",
             ranking: 1,
@@ -69,6 +77,15 @@ struct MockData {
 
 }
 
+struct UserModel {
+    let profileImageName: String
+    let department: String
+    let name: String
+    let generation: String
+    let role: String
+    let mbti: String
+}
+
 struct AppModel: Identifiable {
   let id: UUID
   let imageName: String
@@ -85,7 +102,6 @@ enum DownloadState: String {
     case redownload = "다시 받기"
     case update = "업데이트"
 }
-
 
 enum AppModelCategory: String {
     case networking = "소셜 네트워킹"

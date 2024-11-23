@@ -9,14 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
     
-    @State var profileImageName: String = "person"
-    @State var department: String = "iOS"
-    @State var name: String = "최지석"
-    @State var generation: String = "00년생"
-    @State var role: String = "파트원"
-    @State var mbti: String = "INFP"
-    
-    @State var appModels: [AppModel] = MockData.data
+    @State var userModel = MockData.userModel
+    @State var appModels = MockData.appModels
     
     var body: some View {
         
@@ -25,17 +19,17 @@ struct ContentView: View {
                 ScrollView {
                     VStack {
                         VStack {
-                            ProfileImageView(profileImageName: profileImageName)
-                            ProfileInfoView(department: department,
-                                            name: name,
-                                            generation: generation,
-                                            role: role,
-                                            mbti: mbti)
+                            ProfileImageView(profileImageName: userModel.profileImageName)
+                            ProfileInfoView(department: userModel.department,
+                                            name: userModel.name,
+                                            generation: userModel.generation,
+                                            role: userModel.role,
+                                            mbti: userModel.mbti)
                         }
                         .padding()
                         
                         List {
-                            ForEach(MockData.data) { appModel in
+                            ForEach(MockData.appModels) { appModel in
                                 AppDetailCell(appModel: appModel)
                             }
                         }
